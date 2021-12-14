@@ -7,6 +7,52 @@ const PORT = 4000;
 
 const app = express(); // express functions은 express application을 생성
 
+const logger = (req, res, next) => {
+    console.log(`${req.method} ${req.url}`)
+    // application 전체에서 사용되고 있고 method와 url을 console.log
+
+    next();
+    // next()는 다음에 오는 함수를 호출해준다.
+    // middleware는 작업을 다음 함수에게 넘기는 함수
+    // 모든 handler 구성요소들에는 req, res, next가 잇음
+    
+}
+
+const privateMiddleware = (req, res, next) => {
+    const url = req.url;
+    if(url === "/protected") {
+        return res.send("<h1>Not Allowed</h1>")
+        // url정보를 받아서 /protected url이 탐지될 경우 중간에 개입해서 함수 호출을 막고
+    }
+    console.log("Alowed, you may continue")
+    next();
+    //url이 /protected가 아니라면 다음함수 실행
+}
+
+const handleHome = (req, res) => {
+    // request를 받으면 리턴
+    return res.send("I love middleware");
+    // end() : 서버가 브라우저에게 아무것도 보내지 않고 끝냄
+    // send와 end는 request object
+    // expressjs.com
+    // get은 많은 express의 속성중 하나
+    // Home(root page)에 접근한다면, 함수를 실행
+    // 누군가 어떤 경로로, ge request를 보낸다면 콜백 추가
+}
+
+const handleProtected = (req, res) => {
+    return res.send("Welcome to the private lounge");
+}
+
+app.use(logger);
+app.use(privateMiddleware);
+// app.use()는 global middleware를 만들 수 있게 해줌
+// 어느 URL에서도 작동하는 middleware
+// 순서는 use 다음 get, express는 모든 걸 위에서 아래 순으로 실행시킨다.
+app.get("/", handleHome);
+app.get("/protected", handleProtected);
+
+// 외부접속 listen
 const handleListening = () => console.log(`Server listening on port http://localhost:${PORT}`);
 
 app.listen(PORT, handleListening);
@@ -19,9 +65,21 @@ app.listen(PORT, handleListening);
 //npm init
 
 /*
+
+
+middleware
+- middle software
+- 브라우저와 서버 사이에 존재
+- 모든 middleware는 handler이고 모든 handler는 middleware
+- 모든 handler는 coneroller
+- controller에는 두 개의 argument말고도 next라는 것이 더 있다.
+
+request : 유저가 뭔가를 요청하거나, 보내건, 무슨 행동을 하는 것
+
+
 cannot GET /
 GET -> HTTP method
-/ -> google.com/
+/ -> url
 http : 서버끼리 소통하는 방법
 http request : 웹사이트에 접속하고 서버에 정보를 보내는 방법 
 

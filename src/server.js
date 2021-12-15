@@ -2,11 +2,15 @@
 // const express = require("express");
 //const app = express();
 import express from "express";
+import morgan from "morgan";
+    // morgan이 조금 더 정교함
 
 const PORT = 4000;
+    //백엔드 관습, 거의 비어있음
 
 const app = express(); // express functions은 express application을 생성
-
+const logger = morgan("dev");
+/*
 const logger = (req, res, next) => {
     console.log(`${req.method} ${req.url}`)
     // application 전체에서 사용되고 있고 method와 url을 console.log
@@ -28,9 +32,12 @@ const privateMiddleware = (req, res, next) => {
     next();
     //url이 /protected가 아니라면 다음함수 실행
 }
-
+*/
 const handleHome = (req, res) => {
     // request를 받으면 리턴
+    // req와 res는 express로부터 주어지는 것
+    // req에는 누가 request하는지, cookies, 브라우저 정보, IP주소 같은 request와 관련된 정보가 있음
+
     return res.send("I love middleware");
     // end() : 서버가 브라우저에게 아무것도 보내지 않고 끝냄
     // send와 end는 request object
@@ -44,12 +51,14 @@ const handleProtected = (req, res) => {
     return res.send("Welcome to the private lounge");
 }
 
-app.use(logger);
-app.use(privateMiddleware);
+//app.use(logger, privateMiddleware);
 // app.use()는 global middleware를 만들 수 있게 해줌
 // 어느 URL에서도 작동하는 middleware
 // 순서는 use 다음 get, express는 모든 걸 위에서 아래 순으로 실행시킨다.
+app.use(logger);
 app.get("/", handleHome);
+// "/"에서는 handleHome함수 실행
+// get은 두번째 인자로 함수가 필요함
 app.get("/protected", handleProtected);
 
 // 외부접속 listen
@@ -65,7 +74,30 @@ app.listen(PORT, handleListening);
 //npm init
 
 /*
+Request
+- 브라우저를 통해서 웹사이트에게 하는 모든 상호작용
+- /,,, 으로 request
 
+Server
+- 항상 켜져있고, 인터넷과 연결되어있으면서 request를 listening하고 있는 컴퓨터
+- request는 우리가 서버에 요청하는 것
+
+devDependencies
+- node_module로 감
+- 개발자가 개발할 때 필요한 것들(ex/ nodemon)
+- nodemon : 프로그램에 변경사항이 생기면 자동으로 재시작해줌
+- babel : 최신 javascirpt 코드를 평범한 코드로 변환해줌
+
+dependencies
+- 프로젝트가 돌아가기 위해 필요한 packages
+- package 이름과 버전정보를 자동으로 저장해줌
+- 설치한 package는 모두 node_module에 저장됨
+- dependencies(devDependencies)에 저장된 정보를 npm install을 통해 바로 설치할 수 있기때문에 무거운 node_modules을 git에 업로드할 필요가 없음
+
+package.json
+- node.js 관련 정보를 담는 방법
+- 그냥 text이기 때문에 뭘 넣어도 상관 없음
+- script entry를 생성하고 그안에 script를 입력하면 console에 npm run (script 이름)을 사용할 수 있음
 
 middleware
 - middle software

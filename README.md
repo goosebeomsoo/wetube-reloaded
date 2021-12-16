@@ -7,15 +7,16 @@
     /search -> Search
 
 -   User Router
-    /user/edit -> Edit User
-    /user/delete -> Delete User
+    /user/:id -> See User
+    /user/logout -> Log Out
+    /user/edit -> Edit My Profile
+    /user/delete -> Delete My Profile
 
 -   Video Router
-    /video/watch -> Watch Video
-    /video/edit -> Edit Video
+    /video/:id -> Watch Video
+    /video/:id/edit -> Edit Video
     /video/delete -> Delete Video
-    /video/comments -> Comment on a video
-    /video/comments/delete -> Delete A comment of a Video
+    /video/upload -> Upload Video
 
 Router
 / 작업중인 주제를 기반으로 URL을 그룹화

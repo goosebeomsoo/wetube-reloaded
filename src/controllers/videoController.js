@@ -1,9 +1,8 @@
-const fakeUser = {
-    userName : "Nicolas",
-    loggedIn : false,
-}
-
-export const trending = (req, res) => res.render("home", {pageTitle: "HOME", fakeUser});
+export const trending = (req, res) => {
+    const videos = [];
+    return res.render("home", { pageTitle: "HOME", videos })
+};
+    
 // HTML에 변수 전달
 export const see = (req, res) => res.render("watch", {pageTitle: "WATCH"});
 export const edit = (req, res) => res.render("edit");

@@ -8,8 +8,12 @@ const PORT = 4000;
 
 const app = express();
 const logger = morgan("dev");
-app.use(logger);
 
+app.set("view engine", "pug");
+// pug를 view engine으로 설정
+app.set("views", process.cwd() + "/src/views");
+// 작업 경로를 wetube/views가 아니라, wetube/src/views로 변경
+app.use(logger);
 app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);

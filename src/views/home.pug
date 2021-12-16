@@ -1,12 +1,13 @@
 extends base.pug
+include mixins/video
 
 block content
     h2 Welcome here you will see the trending videos!
-    ul
+    each potato in videos
+        +video(potato)
         // videos는 videosController의 변수와 같아야함
         // video는 리스트 별 변수
         // 통상적으로는 단수와 복수로 사용
-        each video in videos
-            li=video
-        else
-            li Sorry nothing found
+        // 위 list들을 포함한 video가 배열의 수만큼 반복 된다.
+    else
+        li Sorry nothing found

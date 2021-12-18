@@ -1,4 +1,10 @@
 extends base.pug
 
 block content
-    h1 Edit Videos!
+    h4 Change Title of video
+    form(method="POST")
+        input(name="title",placeholder="Video Title", value=video.title, required)
+        input(value="Save", type="submit")
+        // submit을 누르면 데이터가 어디로 갈건지는 action에 작성
+        // GET 검색할 때 사용
+        // POST 정보를 database에 보낼 때

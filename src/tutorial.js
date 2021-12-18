@@ -161,7 +161,7 @@ devDependencies
 - 운전을 잘하려면 음악이 필요한 느낌
 - node_modules에 설치됨
 - --save-dev : devDependencies에 저장
-- babel.donfig.json : 알아서 파일을 찾고 봄
+- babel.config.json : 알아서 파일을 찾고 봄
 - preset은 babel을 위한 엄청 거대한 플러그인 (smart preset 최신 자바스크립트 구문을 사용하게 해줌)
 
 

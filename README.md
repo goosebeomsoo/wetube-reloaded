@@ -19,7 +19,10 @@
     /video/upload -> Upload Video
 
 Router
-/ 작업중인 주제를 기반으로 URL을 그룹화
-/ 라우터를 도메인별로 나누기
-/
-User, Video
+
+-   작업중인 주제를 기반으로 URL을 그룹화
+-   라우터를 도메인별로 나누기
+
+Iteration
+
+-   array의 모든 element에 대해 특정 행동을 취할 때 사용

@@ -8,8 +8,8 @@ import {
 const videoRouter = express.Router();
 
 videoRouter.get("/:id(\\d+)", watch);
-videoRouter.post("/:id(\\d+)/edit", postEdit);
-videoRouter.get("/:id/edit", getEdit);
+videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
+//같은 url안에서 GET과 POST로 축약
 
 export default videoRouter;
 

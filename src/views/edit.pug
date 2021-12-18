@@ -4,6 +4,7 @@ block content
     h4 Change Title of video
     form(method="POST")
         input(name="title",placeholder="Video Title", value=video.title, required)
+        // input에 name을 넣어야 req.body에서 데이터를 볼 수 없음
         input(value="Save", type="submit")
         // submit을 누르면 데이터가 어디로 갈건지는 action에 작성
         // GET 검색할 때 사용

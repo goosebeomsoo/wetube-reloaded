@@ -26,3 +26,9 @@ Router
 Iteration
 
 -   array의 모든 element에 대해 특정 행동을 취할 때 사용
+
+MongoDB
+
+-   General Purpose, Document Based
+-   Super easy to start
+-   일반적인 database는 document-base가 아닌 sql-base(row and column)

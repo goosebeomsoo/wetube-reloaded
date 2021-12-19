@@ -1,26 +1,28 @@
 import express from "express";
+// Web Framework for Node.js
 import morgan from "morgan";
+// logger middleware function
 import globalRouter from "./routers/globalRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 
 const PORT = 4000;
-// PORT 값 설정
+// PORT value setting
 
 const app = express();
-// express 변수 저장
+// setting variable for express
 
 const logger = morgan("dev");
-// morgan 변수 저장
+// Setting variable for morgan
 
 app.set("view engine", "pug");
-// pug를 view engine으로 설정
+// setting pug to view engine
 app.set("views", process.cwd() + "/src/views");
 // pug 작업 경로를 wetube/views가 아니라, wetube/src/views로 변경
 app.use(logger);
 // middleware
 app.use(express.urlencoded({extended : true}));
-// express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 멋진 자바스크립트 형시으로 변형
+// express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 자바스크립트 형식으로 변형
 // middleware
 app.use("/", globalRouter);
 // url "/"에 globalRouter 함수 적용

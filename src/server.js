@@ -1,3 +1,4 @@
+import "./db";
 import express from "express";
 // Web Framework for Node.js
 import morgan from "morgan";
@@ -31,6 +32,6 @@ app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 // url "/users"에 userRouter 함수 적용
 
-const handleListening = () => console.log(`Server listening on port http://localhost:${PORT}`);
+const handleListening = () => console.log(`✅Server listening on port http://localhost:${PORT}`);
 
 app.listen(PORT, handleListening);

@@ -32,3 +32,9 @@ MongoDB
 -   General Purpose, Document Based
 -   Super easy to start
 -   일반적인 database는 document-base가 아닌 sql-base(row and column)
+-   terminal에서 mongo로 실행
+
+mongoose
+
+-   node.js와 mongoDB를 이어주는 다리
+-   elegant mongodb object modeling for node.js

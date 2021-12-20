@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec babel-node src/init.js"
-  },
+  }, 
   "author": "Goosebeomsoo",
   "license": "ISC",
   "bugs": {

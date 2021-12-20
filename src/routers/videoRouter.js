@@ -12,6 +12,7 @@ const videoRouter = express.Router();
 videoRouter.get("/:id(\\d+)", watch);
 videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
 videoRouter.route("/upload").get(getUpload).post(postUpload);
+// videoController에서 getUpload와 postUpload 불러오기
 //같은 url안에서 GET과 POST로 축약
 
 export default videoRouter;

@@ -3,8 +3,8 @@ include mixins/video
 
 block content
     h2 Welcome here you will see the trending videos!
-    each potato in videos
-        +video(potato)
+    each video in videos
+        +video(video)
         // videos는 videosController의 변수와 같아야함
         // video는 리스트 별 변수
         // 통상적으로는 단수와 복수로 사용

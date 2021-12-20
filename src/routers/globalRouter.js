@@ -1,11 +1,11 @@
 import express from "express";
 
 import { join, login } from "../controllers/userController"
-import { trending } from "../controllers/videoController"
+import { home } from "../controllers/videoController"
 
 const globalRouter = express.Router();
 
-globalRouter.get("/", trending);
+globalRouter.get("/", home);
 // url "/"에 trending 함수 적용
 globalRouter.get("/join", join);
 // url "/join"에 join 함수 적용

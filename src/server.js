@@ -1,4 +1,3 @@
-import "./db";
 import express from "express";
 // Web Framework for Node.js
 import morgan from "morgan";
@@ -7,11 +6,9 @@ import globalRouter from "./routers/globalRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 
-const PORT = 4000;
-// PORT value setting
 
 const app = express();
-// setting variable for express
+// setting variable for expressç
 
 const logger = morgan("dev");
 // Setting variable for morgan
@@ -32,6 +29,4 @@ app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 // url "/users"에 userRouter 함수 적용
 
-const handleListening = () => console.log(`✅Server listening on port http://localhost:${PORT}`);
-
-app.listen(PORT, handleListening);
+export default app;

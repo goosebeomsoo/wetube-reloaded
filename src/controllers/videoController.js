@@ -61,20 +61,23 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
     const {title, description, hashtags} = req.body;
     // /video/upload 경로 body안에 있는 form의 형식을 읽어줌
-        await Video.create({
+        try {
+            await Video.create({
             title : title, // = title
             description : description, // description
-            createdAt : Date.now(),
             hashtags : hashtags.split(",").map(word => `#${word}`),
-            meta : {
-                views : 0,
-                rating : 0,
-            },
             // mongoose가 고유 id도 부여해줌
-        })
-        // promise를 return
-        return res.redirect("/");
-        // 홈으로 돌아가기
+            });
+            // promise를 return
+            return res.redirect("/");
+        } catch(error) {
+            console.log(error);
+            return res.render("upload", {
+                pageTitle : "Upload Video",
+                errorMessage : error._message,
+            });
+        }
+        // 홈으로 돌아가기}
 };
 
 

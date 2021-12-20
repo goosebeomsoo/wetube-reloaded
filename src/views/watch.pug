@@ -1,7 +1,9 @@
 extends base.pug
 
 block content
-    h3 #{video.views} #{video.views === 1 ? "view" : "views"}
+    div
+        p=video.description
+        small=video.createdAt
     a(href=`${video.id}/edit`) Edit video &rarr;
     // href 앞에 /를 붙으면 현재 root가 /edit으로 (href="/url" => absolute url)
     // href 앞에 /가 없으면 relative url로 (href = "url"=> relative url)

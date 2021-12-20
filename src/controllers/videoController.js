@@ -34,9 +34,10 @@ export const home = async (req, res) => {
 }; 
     
 // HTML에 변수 전달
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
     const { id } = req.params;
-    return res.render("watch", {pageTitle: `Watching`});
+    const video = await Video.findById(id);
+    return res.render("watch", {pageTitle: video.title, video});
 }
 
 export const getEdit = (req, res) => {
@@ -63,8 +64,8 @@ export const postUpload = async (req, res) => {
     // /video/upload 경로 body안에 있는 form의 형식을 읽어줌
         try {
             await Video.create({
-            title : title, // = title
-            description : description, // description
+            title, // = title
+            description, // description
             hashtags : hashtags.split(",").map(word => `#${word}`),
             // mongoose가 고유 id도 부여해줌
             });

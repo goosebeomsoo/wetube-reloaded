@@ -1,10 +1,13 @@
-extends base.pug
+extends base
 
 block content
-    h4 Change Title of video
+    h4 Update Videos
     form(method="POST")
-        input(name="title",placeholder="Video Title", value=video.title, required)
+        input(value=video.title, name="title",placeholder="Video Title", required)
         // input에 name을 넣어야 req.body에서 데이터를 볼 수 없음
+        input(value=video.description, placeholder="Description", required, type="text" name="description" minlength="20", maxlength="140")
+        input(value=video.hashtags.join(), placeholder="Hashtags separated by comma", required, type="text" name="hashtags")
+        // join() : 배열을 String으로 바꿔줌
         input(value="Save", type="submit")
         // submit을 누르면 데이터가 어디로 갈건지는 action에 작성
         // GET 검색할 때 사용

@@ -36,18 +36,50 @@ export const home = async (req, res) => {
 // HTML에 변수 전달
 export const watch = async (req, res) => {
     const { id } = req.params;
+    // req.params는 router가 주는 express의 기능
     const video = await Video.findById(id);
-    return res.render("watch", {pageTitle: video.title, video});
+    // findById는 id로 영상을 찾을 수 있게 지원해준다.
+    if (!video) {
+        // 비디오가 없다면
+        return res.render("404", {pageTitle : "Video not found.",});
+        // Error check first
+        // return 하지않으면 위 코드를 실행하고 아래 코드도 실행하게 됨
+        // 비디오를 찾을 수 없음
+    } else {
+        // 비디오가 있다면
+        return res.render("watch", {pageTitle: video.title, video});
+        // 비디오 출력
+    };
 }
 
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
     const { id } = req.params;
-    return res.render("edit", {pageTitle : `Editing`});
+    const video = await Video.findById(id);
+    if (!video) {
+        return res.render("404", {pageTitle : "Video not found.",});
+    } else {
+        return res.render("edit", {pageTitle : `Edit ${video.title}`, video});
+        // pug 파일에 변수를 전달해주기 위해서 꼭 video를 정의해줘야함
+    }
 }
 
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
     const { id } = req.params;
-    const { title } = req.body;
+    const {title, description, hashtags} = req.body;
+    const video = await Video.exists({_id : id});
+    // exists는 id 전체를 받지않고 filter를 받는다.
+    if (!video) {
+        return res.render("404", {pageTitle : "Video not found.",});
+    }
+    await Video.findByIdAndUpdate(id, {
+        // 첫번째 인자에는 id, 두번째 인자에는 업데이트할 정보
+        title, 
+        description, 
+        hashtags : hashtags
+        .split(",")
+        .map(word => word.startsWith("#") ? word : `#${word}`),
+    });
+
     return res.redirect(`/videos/${id}`);
     // res.redirect(url) : 브라우저가 redirect(자동으로 이동)하도록 하는 것
     // 전 페이지로 이동하게 해줌

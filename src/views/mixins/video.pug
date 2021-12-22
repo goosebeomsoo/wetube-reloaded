@@ -4,6 +4,9 @@ mixin video(video)
             a(href=`/videos/${video.id}`)=video.title
             // Attribute에서는 backtick 사용
         p=video.description
+        ul
+            each hashtag in video.hashtags
+                li=hashtag
         small=video.createdAt
         hr 
         // Variable과 String을 섞어서 작성하는 방식

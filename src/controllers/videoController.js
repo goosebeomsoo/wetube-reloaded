@@ -9,7 +9,10 @@ export const home = async (req, res) => {
         // await가 database를 기다려준다.
         // database에서 data를 가져오면 아래 작업들 수행
         // 코드 규칙상 await는 function안에서만 사용 가능하고 해당 function이 asynchronous일 때만 가능하다.
-        return res.render("home", { pageTitle: "HOME", videos });
+        return res.render("home", {
+            pageTitle : "HOME", 
+            videos :videos,
+        });
         // return을 적어서 return 뒤에 redirect를 적어서 오류를 모르는 실수 방지
     } catch(error) {
         // error를 catch
@@ -41,13 +44,18 @@ export const watch = async (req, res) => {
     // findById는 id로 영상을 찾을 수 있게 지원해준다.
     if (!video) {
         // 비디오가 없다면
-        return res.render("404", {pageTitle : "Video not found.",});
+        return res.render("404", {
+            pageTitle : "Video not found.",
+        });
         // Error check first
         // return 하지않으면 위 코드를 실행하고 아래 코드도 실행하게 됨
         // 비디오를 찾을 수 없음
     } else {
         // 비디오가 있다면
-        return res.render("watch", {pageTitle: video.title, video});
+        return res.render("watch", {
+            pageTitle: video.title,
+            video
+        });
         // 비디오 출력
     };
 }
@@ -56,9 +64,14 @@ export const getEdit = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
     if (!video) {
-        return res.render("404", {pageTitle : "Video not found.",});
+        return res.render("404", {
+            pageTitle : "Video not found.",
+        });
     } else {
-        return res.render("edit", {pageTitle : `Edit ${video.title}`, video});
+        return res.render("edit", {
+            pageTitle : `Edit ${video.title}`,
+            video
+        });
         // pug 파일에 변수를 전달해주기 위해서 꼭 video를 정의해줘야함
     }
 }
@@ -69,15 +82,15 @@ export const postEdit = async (req, res) => {
     const video = await Video.exists({_id : id});
     // exists는 id 전체를 받지않고 filter를 받는다.
     if (!video) {
-        return res.render("404", {pageTitle : "Video not found.",});
+        return res.render("404", {
+            pageTitle : "Video not found.",
+        });
     }
     await Video.findByIdAndUpdate(id, {
-        // 첫번째 인자에는 id, 두번째 인자에는 업데이트할 정보
+        // model에 적용시킬수 있는 함수, 첫번째 인자에는 id, 두번째 인자에는 업데이트할 정보
         title, 
         description, 
-        hashtags : hashtags
-        .split(",")
-        .map(word => word.startsWith("#") ? word : `#${word}`),
+        hashtags : Video.formatHashtags(hashtags),
     });
 
     return res.redirect(`/videos/${id}`);
@@ -98,7 +111,7 @@ export const postUpload = async (req, res) => {
             await Video.create({
             title, // = title
             description, // description
-            hashtags : hashtags.split(",").map(word => `#${word}`),
+            hashtags : Video.formatHashtags(hashtags),
             // mongoose가 고유 id도 부여해줌
             });
             // promise를 return

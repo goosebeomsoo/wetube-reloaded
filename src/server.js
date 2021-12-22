@@ -8,7 +8,7 @@ import userRouter from "./routers/userRouter";
 
 
 const app = express();
-// setting variable for expressç
+// setting variable for express
 
 const logger = morgan("dev");
 // Setting variable for morgan

@@ -126,6 +126,14 @@ export const postUpload = async (req, res) => {
         // 홈으로 돌아가기}
 };
 
+export const deleteVideo = async (req, res) => {
+    const { id } = req.params;
+    await Video.findByIdAndDelete(id);
+    // remove와 delete가 있지만 무조건 delete사용
+    console.log(id);
+    return res.redirect("/");
+}
+
 
 /*
 pug

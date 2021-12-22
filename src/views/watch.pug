@@ -4,6 +4,11 @@ block content
     div
         p=video.description
         small=video.createdAt
-    a(href=`${video.id}/edit`) Edit video &rarr;
+    a(href=`${video.id}/edit`) Edit Video &rarr;
+    div
+        a(href=`${video.id}/delete`) Delete Video &rarr;
+        // 해당 url을 방문하면 비디오 삭제됨
+
+
     // href 앞에 /를 붙으면 현재 root가 /edit으로 (href="/url" => absolute url)
     // href 앞에 /가 없으면 relative url로 (href = "url"=> relative url)

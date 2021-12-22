@@ -4,7 +4,8 @@ export const home = async (req, res) => {
     // promise
     try {
         //try는 실행하고 error가 있으면 catch
-        const videos = await Video.find({});
+        const videos = await Video.find({}).sort({createdAt : "desc"});
+        // sort()로 순서 정렬
         // await를 find앞에 적으면 find는 callback을 필요로 하지 않는다는 것을 알게 된다.
         // await가 database를 기다려준다.
         // database에서 data를 가져오면 아래 작업들 수행
@@ -134,7 +135,18 @@ export const deleteVideo = async (req, res) => {
     return res.redirect("/");
 }
 
-
+export const search = async (req, res) => {
+    const { keyword } = req.query;
+    let videos = [];
+    if (keyword) {
+        videos = await Video.find({
+            title : {
+                $regex : new RegExp(keyword, "i")
+            },
+        });
+    }
+    return res.render("search", {pageTitle : "Search", videos});
+}
 /*
 pug
 - returning HTML

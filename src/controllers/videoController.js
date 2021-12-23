@@ -10,15 +10,17 @@ export const home = async (req, res) => {
         // await가 database를 기다려준다.
         // database에서 data를 가져오면 아래 작업들 수행
         // 코드 규칙상 await는 function안에서만 사용 가능하고 해당 function이 asynchronous일 때만 가능하다.
+
         return res.render("home", {
             pageTitle : "HOME", 
-            videos :videos,
+            videos,
         });
+
         // return을 적어서 return 뒤에 redirect를 적어서 오류를 모르는 실수 방지
     } catch(error) {
         // error를 catch
         // 연결이 끊기거나, 서버 포화상태이거나 할 때
-        return res.render("Server Error", {error});
+        return res.render("home", {error});
     }
     /*
     // callback

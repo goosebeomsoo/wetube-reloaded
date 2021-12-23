@@ -11,9 +11,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function() {
-    console.log(this.password);
     this.password = await bcrypt.hash(this.password, 5);
-    console.log(this.password);
     // bcrypt.hash(해시할 패스워드, saltRounds(해시 횟수))
 })
 

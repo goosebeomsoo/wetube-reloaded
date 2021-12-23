@@ -47,7 +47,7 @@ export const watch = async (req, res) => {
     // findById는 id로 영상을 찾을 수 있게 지원해준다.
     if (!video) {
         // 비디오가 없다면
-        return res.render("404", {
+        return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
         // Error check first
@@ -67,7 +67,7 @@ export const getEdit = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
     if (!video) {
-        return res.render("404", {
+        return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
     } else {
@@ -85,7 +85,7 @@ export const postEdit = async (req, res) => {
     const video = await Video.exists({_id : id});
     // exists는 id 전체를 받지않고 filter를 받는다.
     if (!video) {
-        return res.render("404", {
+        return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
     }
@@ -121,7 +121,7 @@ export const postUpload = async (req, res) => {
             return res.redirect("/");
         } catch(error) {
             console.log(error);
-            return res.render("upload", {
+            return res.status(400).render("upload", {
                 pageTitle : "Upload Video",
                 errorMessage : error._message,
             });

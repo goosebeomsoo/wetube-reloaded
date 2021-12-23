@@ -8,18 +8,20 @@ export const postJoin = async (req, res) => {
     const { name, username, email, password, password2, location } = req.body;
     const pageTitle = "Join";
     if (password !== password2) {
-        return res.render("join", {
+        return res.status(400).render("join", {
+            // 상태코드 를 브라우저에게 보내주냐 아니냐에 따라 url 히스토리 기록 여부가 결정됨
             pageTitle,
             errorMessage : "Password confirmmation does not match",
         });
     }
-    
+
     const exists = await User.exists({ $or : [
         { username },
         { email },
     ] });
+    
     if (exists) {
-        return res.render("join", {
+        return res.status(400).render("join", {
             pageTitle,
             errorMessage : "This username/email is already taken",
         });

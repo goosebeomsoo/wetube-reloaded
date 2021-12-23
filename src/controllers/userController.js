@@ -87,3 +87,20 @@ export const edit = (req, res) => res.send("edit");
 export const remove = (req, res) => res.send("remove");
 export const logout = (req, res) => res.send("logout");
 export const see = (req, res) => res.send("see");
+
+/*
+Cookies
+- 유저를 기억하는 방법
+- 
+
+Sessions
+- 백엔드와 브라우저 간에 어떤 활동을 했는지 기억하는 것
+- 백엔드와 브라우저 사이의 memory, history 같은 것
+- 작동하려면 백엔드와 브라우저가 정보를 가지고 있어야함
+
+Stateless
+- 한번 연결 되었다가 끝나는 것
+
+express-session
+- express에서 세션을 처리할 수 있게 해주는 middleware
+*/

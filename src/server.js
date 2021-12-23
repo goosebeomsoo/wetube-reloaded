@@ -2,6 +2,7 @@ import express from "express";
 // Web Framework for Node.js
 import morgan from "morgan";
 // logger middleware function
+import session from "express-session";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
@@ -33,6 +34,23 @@ app.use(logger);
 app.use(express.urlencoded({extended : true}));
 // express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 자바스크립트 형식으로 변형
 // middleware
+
+app.use(session({
+    secret : "Hello!",
+    resave : true,
+    saveUninitialized : true,
+}));
+// Router앞에 초기화
+// secret이라는 설정 필요
+// 사이트로 들어오는 모두를 기억하게해줌 - 로그인하지 않아도 기억함
+// session과 session id는 브라우저를 기억하는 방법중 하나
+// Server가 브라우저에게 session id르 주고 있음 브라우저가 서버에 요청할 때마다 쿠키에서 세션 id를 가져와 보내주고 있음, 서버는 session id를 읽고 어떤 브라우저인지 알 수 있음
+
+app.get("/add-one", (req, res, next) => {
+    req.session.potato += 1;
+    return res.send(`${req.session.id}`);
+})
+
 
 app.use("/", rootRouter);
 // url "/"에 globalRouter 함수 적용

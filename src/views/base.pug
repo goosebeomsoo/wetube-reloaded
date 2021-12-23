@@ -10,12 +10,20 @@ html(lang="ko")
                 ul 
                     li 
                         a(href="/") Home &rarr;
+                    if loggedIn
+                        li
+                            a(href="/logout") Log out &rarr;
+                        li
+                            a(href="/profile") welcome #{loggedInUser.name}! &rarr;
+                    else
+                        li 
+                            a(href="/join") Join &rarr;
+                        li 
+                            a(href="/login") Login &rarr;
                     li 
                         a(href="/videos/upload") Upload Video &rarr;
                     li 
                         a(href="/search") Search &rarr;
-                    li 
-                        a(href="/Join") Join &rarr;
         main
             block content
         include partials/footer

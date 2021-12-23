@@ -6,6 +6,7 @@ import session from "express-session";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
+import { localsMiddleware } from "./middleware";
 
 
 const app = express();
@@ -40,17 +41,16 @@ app.use(session({
     resave : true,
     saveUninitialized : true,
 }));
+
 // Router앞에 초기화
 // secret이라는 설정 필요
 // 사이트로 들어오는 모두를 기억하게해줌 - 로그인하지 않아도 기억함
 // session과 session id는 브라우저를 기억하는 방법중 하나
 // Server가 브라우저에게 session id르 주고 있음 브라우저가 서버에 요청할 때마다 쿠키에서 세션 id를 가져와 보내주고 있음, 서버는 session id를 읽고 어떤 브라우저인지 알 수 있음
+// session middleware가 있으면 express가 알아서 그 브라우저를 위한 id를 만들고, 브라우저한테 보내줌. 그러면 브라우저가 쿠키에 그 session id를 저장하고 express에서도 그 세션을 세션 DB에 저장. 그러면 브라우저한테 보내서 쿠키에 저장한 session id를 브라우저가 localhost:4000의 모든 url에 요청을 보낼 때마다 세션 id를 요청과 함께 보낸다. -> 백엔드에서 어떤 유저가, 어떤 브라우저에서 요청을 보냈는지 알 수 있음
 
-app.get("/add-one", (req, res, next) => {
-    req.session.potato += 1;
-    return res.send(`${req.session.id}`);
-})
-
+app.use(localsMiddleware);
+// locals middleware가 session middleware 다음에 와야 session object에 접근할 수 있음
 
 app.use("/", rootRouter);
 // url "/"에 globalRouter 함수 적용

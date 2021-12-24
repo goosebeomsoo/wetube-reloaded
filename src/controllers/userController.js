@@ -85,9 +85,12 @@ export const postLogin = async (req, res) => {
     return res.redirect("/");
 }
 
+export const logout = (req, res) => {
+    res.send("fuck");
+};
+
 export const edit = (req, res) => res.send("edit");
 export const remove = (req, res) => res.send("remove");
-export const logout = (req, res) => res.send("logout");
 export const see = (req, res) => res.send("see");
 
 /*

@@ -3,6 +3,8 @@ import express from "express";
 import morgan from "morgan";
 // logger middleware function
 import session from "express-session";
+import MongoStore from "connect-mongo";
+// databese(mongodb)에 session을 저장할 수 있게 해줌
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
@@ -40,6 +42,9 @@ app.use(session({
     secret : "Hello!",
     resave : true,
     saveUninitialized : true,
+    store : MongoStore.create({ mongoUrl : "mongodb://127.0.0.1:27017/wetube" }),
+    // mongodb url에 session 저장 디렉토리 생성
+    // sessions은 원래 server에 저장되고 server를 껏다가 키면 session도 없어지기 때문에 database에 저장해야함
 }));
 
 // Router앞에 초기화
@@ -48,6 +53,7 @@ app.use(session({
 // session과 session id는 브라우저를 기억하는 방법중 하나
 // Server가 브라우저에게 session id르 주고 있음 브라우저가 서버에 요청할 때마다 쿠키에서 세션 id를 가져와 보내주고 있음, 서버는 session id를 읽고 어떤 브라우저인지 알 수 있음
 // session middleware가 있으면 express가 알아서 그 브라우저를 위한 id를 만들고, 브라우저한테 보내줌. 그러면 브라우저가 쿠키에 그 session id를 저장하고 express에서도 그 세션을 세션 DB에 저장. 그러면 브라우저한테 보내서 쿠키에 저장한 session id를 브라우저가 localhost:4000의 모든 url에 요청을 보낼 때마다 세션 id를 요청과 함께 보낸다. -> 백엔드에서 어떤 유저가, 어떤 브라우저에서 요청을 보냈는지 알 수 있음
+// session store는 우리가 session을 저장하는 곳
 
 app.use(localsMiddleware);
 // locals middleware가 session middleware 다음에 와야 session object에 접근할 수 있음

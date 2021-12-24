@@ -10,7 +10,6 @@ import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 import { localsMiddleware } from "./middleware";
 
-
 const app = express();
 // setting variable for express
 
@@ -39,13 +38,24 @@ app.use(express.urlencoded({extended : true}));
 // middleware
 
 app.use(session({
-    secret : "Hello!",
-    resave : true,
-    saveUninitialized : true,
-    store : MongoStore.create({ mongoUrl : "mongodb://127.0.0.1:27017/wetube" }),
+    secret : process.env.COOKIE_SECRET, // longer, powerful, random
+    // cookie에 sign할 때 사용하는 String
+    // cookie에 sign하는 이유는 우리 backend가 cookie를 줬다는 것을 보여주기 위함이다.
+    resave : false,
+    saveUninitialized : false,
+    //cookie : { maxAge : 20000, = 20sec },
+    // ->Expires : 만료일, 만료날짜를 지정하지 않으면 expires가 sessions cookie로 설정됨
+    // session의 초기화, false : session을 수정할 때만 DB에 저장하고 쿠키를 넘겨줌
+    store : MongoStore.create({ mongoUrl : process.env.DB_URL }),
     // mongodb url에 session 저장 디렉토리 생성
     // sessions은 원래 server에 저장되고 server를 껏다가 키면 session도 없어지기 때문에 database에 저장해야함
+    // 익명 사용자의 session까지 database에 저장해야할 필요는 없음
 }));
+/*
+Cookie component
+- domain : cookie를 만든 backend가 누구인지 알려줌. 브라우저는 domain에 따라 cookie를 저장, 또 cookie는 domain에 있는 backend로만 전송됨.
+
+*/
 
 // Router앞에 초기화
 // secret이라는 설정 필요

@@ -81,6 +81,7 @@ export const postLogin = async (req, res) => {
     }
     req.session.loggedIn = true;
     req.session.user = user;
+    // sessions 초기화
     // sessions에 user 정보 저장
     return res.redirect("/");
 }

@@ -1,10 +1,9 @@
 import express from "express";
 
 import { getJoin, postJoin, getLogin, postLogin, logout } from "../controllers/userController"
-import { home, search } from "../controllers/videoController"
+import { home, search } from "../controllers/videoController";
 
 const rootRouter = express.Router();
-
 
 rootRouter.get("/", home);
 // url "/"에 home 함수 적용

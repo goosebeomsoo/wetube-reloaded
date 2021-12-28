@@ -1,4 +1,5 @@
 import User from "../models/user";
+import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => {
@@ -64,7 +65,7 @@ export const getLogin = (req, res) => {
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login"
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username, socialOnly : false, });
     if(!user) {
         return res.status(400).render("login", {
             pageTitle, 
@@ -86,8 +87,99 @@ export const postLogin = async (req, res) => {
     return res.redirect("/");
 }
 
+export const startGithubLogin = (req, res) => {
+    // github login을 클릭하면, url로 회원 인증
+    const baseUrl = "https://github.com/login/oauth/authorize?";
+    const config = {
+        client_id : process.env.GH_CLIENT,
+        allow_signup : false,
+        scope : "read:user user:email",
+    };
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}${params}`;
+    return res.redirect(finalUrl);
+}
+
+export const finishGithubLogin = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/access_token"
+    const config = {
+        client_id : process.env.GH_CLIENT,
+        client_secret : process.env.GH_SECRET,
+        code : req.query.code,
+    }
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+
+    const tokenRequest = await (
+        await fetch(finalUrl, {
+        method : "POST", // GET, POST, PUT, DELETE
+        headers : {
+            Accept : "application/json",
+        },
+    })
+    ).json();
+    
+    if ("access_token" in tokenRequest) {
+        const { access_token } = tokenRequest;
+        // scope에 명시한 권한만 가져다줌
+        const apiUrl = "https://api.github.com"
+        const userData = await (
+            await fetch(`${apiUrl}/user`, {
+                headers : {
+                    Authorization : `token ${access_token}`
+                }
+            })
+        ).json();
+
+        const emailData = await (
+            await fetch(`${apiUrl}/user/emails`, {
+                headers : {
+                    Authorization : `token ${access_token}`
+                }
+            })
+        ).json();
+        
+        const emailObj = emailData.find(
+            (email) => email.primary === true && email.verified === true
+        );
+
+        if (!emailObj) {
+            return res.redirect("/login");
+        }
+
+        let user = await User.findOne({ email : emailObj.email });
+        
+        if (!user) {
+            user = await User.create({
+                avatarUrl : userData.avatarUrl,
+                name : userData.name,
+                username : userData.login,
+                email : emailObj.email,
+                password : "",
+                socialOnly : true,
+                location : userData.location,
+            });
+        } else {
+            req.session.loggedIn = true;
+            req.session.user = user;
+            return res.redirect("/");
+        }
+        // primary와 verified가 true라면 이메일로 로그인 허용
+    } else {
+        return res.redirect("/login");
+    }
+    /*
+    fetch()
+    -> fetch함수를 사용하면 클라이언트가 직접 HTTP 요청에 응답을 받는게 간편해짐
+    첫번째 인자로 url, 두번째 인자로 option object를 받고 Promise 타입의 object 반환
+    fetch는 브라우저 상에는 존재하지만 server에는 존재하지않기 때문에 nodejs는 node-fetch라는
+    패키지를 설치해야함
+    */
+    // node-fetch version 3 부터는 ESM-only Module, CSM에서는 version 2로 설치해야함
+};
+
 export const logout = (req, res) => {
-    res.send("fuck");
+    return res.send("log out");
 };
 
 export const edit = (req, res) => res.send("edit");

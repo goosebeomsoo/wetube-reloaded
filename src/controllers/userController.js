@@ -179,7 +179,8 @@ export const finishGithubLogin = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-    return res.send("log out");
+    req.session.destroy();
+    return res.redirect("/");
 };
 
 export const edit = (req, res) => res.send("edit");

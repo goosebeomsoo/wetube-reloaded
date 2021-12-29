@@ -3,23 +3,32 @@ import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => {
-    res.render("join", {pageTitle : "Join"})
+    res.render("join", {pageTitle : "Join"});
+    // Join page rendering
 };
 
 export const postJoin = async (req, res) => {
+    console.log(req.body);
     const { name, username, email, password, password2, location } = req.body;
+    // join page form안의 내용 object로 변환
     const pageTitle = "Join";
     if (password !== password2) {
+        // 입력한 password가 일치하지 않을 경우
         return res.status(400).render("join", {
-            // 상태코드 를 브라우저에게 보내주냐 아니냐에 따라 url 히스토리 기록 여부가 결정됨
+            // http status를 400으로 보내고 아래 내용을 담은 join페이지 렌더링
+            // 상태코드를 브라우저에게 보내주냐 아니냐에 따라 url 히스토리 기록 여부가 결정됨
             pageTitle,
+            // pageTitle을 Join으로
             errorMessage : "Password confirmmation does not match",
+            // errorMessage를 Password confirmmation does not match로
         });
-    }
+    };
 
     const exists = await User.exists({ $or : [
-        { username },
-        { email },
+       { username },
+       { email },
+       // users database에 username또는 email이 있으면 true 
+       // exists() => return true if at least one document exists in the database that matches the given filter, and false otherwise
     ] });
 
     if (exists) {
@@ -27,15 +36,17 @@ export const postJoin = async (req, res) => {
             pageTitle,
             errorMessage : "This username/email is already taken",
         });
+        // users database에 username또는 email이 있으면 http status를 400으로 반환하고 join페이지 렌더링
     }
 
     try {
+        // Model.create() => 
         await User.create({
-            name,
-            username,
-            email,
-            password,
-            location,
+            name, // users database의 name에 form에서 작성된 name 저장
+            username, // users database의 username에 form에서 작성된 username 저장
+            email, // users database의 email에 form에서 작성된 email 저장
+            password, // users database의 password에 form에서 작성된 password 저장
+            location,  // users database의 location에 form에서 작성된 locaiton 저장
         });
     } catch(error) {
         console.log(error);
@@ -44,6 +55,7 @@ export const postJoin = async (req, res) => {
             errorMessage : error._message,
         });
     }
+    // try/catch를 통해 에러 처리
     
     res.redirect("/login");
     // /Join url에서 form의 정보를 가져옴
@@ -59,54 +71,91 @@ export const postJoin = async (req, res) => {
 };
 
 export const getLogin = (req, res) => {
-    return res.render("login", {pageTitle : "Log in"})
+    return res.render("login", {pageTitle : "Log in"});
+    // /login으로 접속할 시 login 페이지 렌더링
 };
 
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
-    const pageTitle = "Login"
-    const user = await User.findOne({ username, socialOnly : false, });
+    // login form에서 username과 password 가져오기
+    const pageTitle = "Login";
+    // pagetitle === Login
+    const user = await User.findOne({
+        // await로 database에서 user의 정보를 기다림
+        username, // username은 login form에 입력된 username
+        socialOnly : false, // socialOnly는 false로 (social login이 아닌 상태 표시)
+    });
+    // users database의 username과 login form에 입력된 username이 같은 상태
+    // Model.findOne() => 하나의 object를 반환
     if(!user) {
+        // users database의 username과 login form에 입력된 username이 같지 않다면
         return res.status(400).render("login", {
+            // http 400 반환 하고 login 페이지 렌더링
             pageTitle, 
             errorMessage  : "Account not found"
         });
     };
 
     const match = await bcrypt.compare(password, user.password);
+    // database에 저장된 user의 password가 해시값으로 저장되어있기 때문에 bcrypt 사용
+    // form에 입력된 "password"와 form에 입력된 username이 database에 입력된 username과 같으며 socialOnly가 false인 user의 "password"가 true임을 match 변수에 저장
+    // bcrypt.compare(inputPassword, databasePassword)
     if(!match) {
+        // 입력된 password와 database의 password가 같지않을때
         return res.status(400).render("login", {
+            // http 400 반환하고 login 페이지 렌더링
             pageTitle,
             errorMessage : "Wrong password"
         });
+    } else {
+        // 입력된 password와 database의 passwordrk 같을 때는
+        req.session.loggedIn = true;
+        // request session의 login상태를 true로 설정.
+        req.session.user = user;
+        // request session의 user를 login form에 입력한 username과 같고 social login 상태는 false인 유저의 정보로
+        return res.redirect("/");
+        // 그리고 home으로 돌아감
     }
-    req.session.loggedIn = true;
-    req.session.user = user;
     // sessions 초기화
     // sessions에 user 정보 저장
-    return res.redirect("/");
 }
 
 export const startGithubLogin = (req, res) => {
-    // github login을 클릭하면, url로 회원 인증
+    // user를 github로 보내서 인증
     const baseUrl = "https://github.com/login/oauth/authorize?";
+    // 인증을 위한 url을 baseUrl 변수에 설정
     const config = {
         client_id : process.env.GH_CLIENT,
+        // env파일에 저장된 클라이언트 아이디를 불러옴
         allow_signup : false,
         scope : "read:user user:email",
+        // 공백으로 scope 구분
     };
+    // config 변수에 인증 정보 저장
     const params = new URLSearchParams(config).toString();
+    // URLSearchParams는 object를 parameter 변환해줌 (하지만 type은 object)
+    // Object.toString()은 object를 String type으로 변환해줌
+    // "https://github.com/login/oauth/autherize?client_id=1ca882aeb7b07d6e79a3&allow_signup=false&scope=user%20email"
+    // 공백은 %20으로 반환됨
     const finalUrl = `${baseUrl}${params}`;
+    // baseUrl에 params 더해서 finalUrl로 변수 저장
     return res.redirect(finalUrl);
+    // finalUrl변수로 redirect
 }
 
 export const finishGithubLogin = async (req, res) => {
-    const baseUrl = "https://github.com/login/oauth/access_token"
+    // 소셜로그인 끝
+    const baseUrl = "https://github.com/login/oauth/access_token";
+    // baseUrl 변수에 https://github.com/login/oauth/access_token 설정
     const config = {
         client_id : process.env.GH_CLIENT,
+        // client id를 env에 저장된 클라이언트 id로 불러옴
         client_secret : process.env.GH_SECRET,
+        // client secret을 env에 저장된 클라이언트 secret으로 불러옴
         code : req.query.code,
+        // req.query의 code이름
     }
+    // config 객체 생성
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
 
@@ -180,11 +229,10 @@ export const finishGithubLogin = async (req, res) => {
 
 export const logout = (req, res) => {
     req.session.destroy();
-    return res.redirect("/");
+    return res.redirect("/login");
 };
 
 export const edit = (req, res) => res.send("edit");
-export const remove = (req, res) => res.send("remove");
 export const see = (req, res) => res.send("see");
 
 /*

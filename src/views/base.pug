@@ -11,10 +11,14 @@ html(lang="ko")
                     li 
                         a(href="/") Home &rarr;
                     if loggedIn
+                        // res.locals의 key를 사용할 수 있음
+                        // res.locals.loggedIn이 true라면
                         li
                             a(href="/logout") Log out &rarr;
+                            // log out menu 보여주고
                         li
                             a(href="/profile") welcome #{loggedInUser.name}! &rarr;
+                            // res.locas.loggedInUser에서 name의 value 불러오기
                     else
                         li 
                             a(href="/join") Join &rarr;

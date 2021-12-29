@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+// mongoose 불러오기
 
 const videoSchema = new mongoose.Schema({
+    // video schema model 생성
     title : { type : String, required : true, trim : true, maxLength : 80},
         // title의 데이터 타입을 문자열로
     description : { type : String, required : true, trim : true, minLength : 20, maxLength : 140}, 
@@ -19,10 +21,14 @@ const videoSchema = new mongoose.Schema({
 });
 // video 모델의 형태 정립
 
-videoSchema.static("formatHashtags", function(hashtags) {
+videoSchema.static("formatHashtags", (hashtags) => {
+    // Schema.static(String | Object, Function) => Schema model에 method 더하기
     return hashtags
     .split(",")
     .map(word => word.startsWith("#") ? word : `#${word}`);
+    // String.split() => split() 메서드는 String 객체를 지정한 구분자를 이용하여 여러개의 문자열을 나누고 배열 형태로 반환.
+    // Array.map() => map() 메서드는 배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열을 반환
+    // str.statswith(searchString) => 문자열이 searchString으로 시작하면 true, 아니멸 false
 });
 
 /*

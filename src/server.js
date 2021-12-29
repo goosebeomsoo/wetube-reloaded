@@ -3,18 +3,26 @@ import express from "express";
 import morgan from "morgan";
 // logger middleware function
 import session from "express-session";
+// express-session를 session으로 불러오기
 import MongoStore from "connect-mongo";
 // databese(mongodb)에 session을 저장할 수 있게 해줌
 import rootRouter from "./routers/rootRouter";
+// rooterRouter.js 파일에서 rootRouter 불러오기
 import videoRouter from "./routers/videoRouter";
+// videoRouter.js 파일에서 videoRouter 불러오기
 import userRouter from "./routers/userRouter";
+import { use } from "bcrypt/promises";
+// userRouter.js 파일에서 userRouter 불러오기
 import { localsMiddleware } from "./middleware";
+// middleware.js 파일에서 localsMiddleware 불러오기
 
 const app = express();
 // setting variable for express
+// express 기본 세팅
 
 const logger = morgan("dev");
 // Setting variable for morgan
+// morgan으로 logging 기록
 
 /*
 set(name, value) : Assin setting A to B, You want store any value that you want, but certain names can be used to configure the behavior of the server. These special names are listed in the app settings table.
@@ -23,7 +31,7 @@ set(name, value) : Assin setting A to B, You want store any value that you want,
 */
 
 app.set("view engine", "pug");
-// setting pug to view engine
+// view engine으로 pug설정
 
 app.set("views", process.cwd() + "/src/views");
 // pug 작업 경로를 wetube/views가 아니라, wetube/src/views로 변경
@@ -31,10 +39,10 @@ app.set("views", process.cwd() + "/src/views");
 // -> pug를 view엔진으로 설정하고 views의 작업 경로를 현재 작업 경로에 src/view를 더하기
 
 app.use(logger);
-// morgan을 middleware로 설정
+// morgan을 middleware로 사용
 
 app.use(express.urlencoded({extended : true}));
-// express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 자바스크립트 형식으로 변형
+// express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 자바스크립트 형식으로 변형 (req.body를 사용할 수 있게 만들어줌)
 // middleware
 
 app.use(session({

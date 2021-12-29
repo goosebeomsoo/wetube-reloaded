@@ -3,6 +3,7 @@ include mixins/video
 
 block content
     each video in videos
+        // videos 수만큼 렌더링
         +video(video)
         // videos는 videosController의 변수와 같아야함
         // video는 리스트 별 변수

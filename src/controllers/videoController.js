@@ -5,6 +5,7 @@ export const home = async (req, res) => {
     try {
         //try는 실행하고 error가 있으면 catch
         const videos = await Video.find({}).sort({createdAt : "desc"});
+        // video database에서 전체 데이터를 찾고 작성순으로 정렬
         // sort()로 순서 정렬
         // await를 find앞에 적으면 find는 callback을 필요로 하지 않는다는 것을 알게 된다.
         // await가 database를 기다려준다.
@@ -20,7 +21,7 @@ export const home = async (req, res) => {
     } catch(error) {
         // error를 catch
         // 연결이 끊기거나, 서버 포화상태이거나 할 때
-        return res.render("home", {error});
+        return res.status(400).render("home", {pageTitle : "Error"});
     }
     /*
     // callback
@@ -41,12 +42,15 @@ export const home = async (req, res) => {
     
 // HTML에 변수 전달
 export const watch = async (req, res) => {
+    // 비디오 창으로 이동
     const { id } = req.params;
     // req.params는 router가 주는 express의 기능
+    // express가 임의로 부여한 id를 변수로 지정
     const video = await Video.findById(id);
+    // 부여된 아이디로 video의 정보를 불러올 수 있음
     // findById는 id로 영상을 찾을 수 있게 지원해준다.
     if (!video) {
-        // 비디오가 없다면
+        // dababase에 저장된 video data의 id 값이 일치하지않다면
         return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
@@ -57,16 +61,20 @@ export const watch = async (req, res) => {
         // 비디오가 있다면
         return res.render("watch", {
             pageTitle: video.title,
-            video
+            video,
         });
         // 비디오 출력
     };
 }
 
 export const getEdit = async (req, res) => {
+    // /:id([0-9a-f]{24})/edit 경로에 비디오 수정 페이지 출력
     const { id } = req.params;
+    // 요청된 url에 임의로 부여된 id값을 변수에 저장
     const video = await Video.findById(id);
+    // id값으로 데이터 정보 찾기
     if (!video) {
+        // id값이 일치하지 않다면
         return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
@@ -81,8 +89,11 @@ export const getEdit = async (req, res) => {
 
 export const postEdit = async (req, res) => {
     const { id } = req.params;
+    // 임의로 부여된 id 변수 저장
     const {title, description, hashtags} = req.body;
+    // Video update form에서 title, description, hashtags의 내용을 가져옴
     const video = await Video.exists({_id : id});
+    // videos database의 _id값과 부여된 id가 일치하여 true인 boolean을 video 변수에 저장
     // exists는 id 전체를 받지않고 filter를 받는다.
     if (!video) {
         return res.status(404).render("404", {
@@ -90,10 +101,13 @@ export const postEdit = async (req, res) => {
         });
     }
     await Video.findByIdAndUpdate(id, {
+        // Model.findByIdAndUpdate({_id : id}) => database의 id값과 같은 id값을 찾고 정보를 수정한다.
         // model에 적용시킬수 있는 함수, 첫번째 인자에는 id, 두번째 인자에는 업데이트할 정보
-        title, 
-        description, 
+        title, // title의 정보를 form에 입력한 title의 정보로 업데이트
+        description,  // description 정보를 form에 입력한 description의 정보로 업데이트
         hashtags : Video.formatHashtags(hashtags),
+        // == hashtags : hashtags.split(",").map(word) => word.startsWith("#") ? word : `#${word}`
+        // hashtags의 정보를 Vide에 입력한 title의 정보로 업데이트
     });
 
     return res.redirect(`/videos/${id}`);
@@ -105,6 +119,7 @@ export const postEdit = async (req, res) => {
 
 export const getUpload = (req, res) => {
     return res.render("upload", {pageTitle : "Upload Video"});
+    // upload 페이지 렌더링
 };
 
 export const postUpload = async (req, res) => {
@@ -117,8 +132,12 @@ export const postUpload = async (req, res) => {
             hashtags : Video.formatHashtags(hashtags),
             // mongoose가 고유 id도 부여해줌
             });
+
+            const videoTitle = await Video.findOne({title});
+            const videoId = videoTitle.id;
+            console.log(videoId);
             // promise를 return
-            return res.redirect("/");
+            return res.redirect(`/videos/${videoId}`);
         } catch(error) {
             console.log(error);
             return res.status(400).render("upload", {

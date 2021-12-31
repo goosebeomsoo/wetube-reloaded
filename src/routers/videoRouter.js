@@ -1,4 +1,5 @@
 import express from "express";
+import { all } from "express/lib/application";
 import { 
     watch, 
     getEdit, 
@@ -7,14 +8,17 @@ import {
     postUpload,
     deleteVideo } 
     from "../controllers/videoController"
+import { 
+    protectorMiddleware } 
+    from "../middleware";
 
 const videoRouter = express.Router();
 // 변수를 Router로 적용
 
 videoRouter.get("/:id([0-9a-f]{24})", watch);
-videoRouter.route("/:id([0-9a-f]{24})/edit").get(getEdit).post(postEdit);
-videoRouter.route("/:id([0-9a-f]{24})/delete").get(deleteVideo);
-videoRouter.route("/upload").get(getUpload).post(postUpload);
+videoRouter.route("/:id([0-9a-f]{24})/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
+videoRouter.route("/:id([0-9a-f]{24})/delete").all(protectorMiddleware).get(deleteVideo);
+videoRouter.route("/upload").all(protectorMiddleware).get(getUpload).post(postUpload);
 // videoController에서 getUpload와 postUpload 불러오기
 // 같은 url안에서 GET과 POST로 축약
 

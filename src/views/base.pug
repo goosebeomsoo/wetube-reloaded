@@ -17,18 +17,18 @@ html(lang="ko")
                         li
                             a(href="/users/edit") Edit Profile &rarr;
                         li
-                            a(href="/logout") Log out &rarr;
+                            a(href="/users/logout") Log out &rarr;
                             // log out menu 보여주고
                         li
                             a(href="/my-profile") welcome #{loggedInUser.name}! &rarr;
                             // res.locas.loggedInUser에서 name의 value 불러오기
+                        li 
+                            a(href="/videos/upload") Upload Video &rarr;
                     else
                         li 
                             a(href="/join") Join &rarr;
                         li 
                             a(href="/login") Login &rarr;
-                    li 
-                        a(href="/videos/upload") Upload Video &rarr;
                     li 
                         a(href="/search") Search &rarr;
         main

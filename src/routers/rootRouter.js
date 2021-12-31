@@ -4,23 +4,24 @@ import {
     getJoin, 
     postJoin, 
     getLogin, 
-    postLogin, 
-    logout } 
+    postLogin } 
     from "../controllers/userController"
 import { 
     home, 
     search } 
     from "../controllers/videoController";
+import { 
+    publicOnlyMiddleware } 
+    from "../middleware";
 
 const rootRouter = express.Router();
 
 rootRouter.get("/", home);
 // url "/"에 home 함수 적용
-rootRouter.route("/join").get(getJoin).post(postJoin);
+rootRouter.route("/join").all(publicOnlyMiddleware).get(getJoin).post(postJoin);
 // url "/join"에 join 함수 적용
-rootRouter.route("/login").get(getLogin).post(postLogin);
+rootRouter.route("/login").all(publicOnlyMiddleware).get(getLogin).post(postLogin);
 // url "/login"에 login 함수 적용
-rootRouter.get("/logout", logout);
 
 rootRouter.get("/search", search);
 

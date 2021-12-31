@@ -9,3 +9,22 @@ export const localsMiddleware = (req, res, next) => {
     //res.locals => An object that contains reponse local variables scoped to the request, and therefore available only th the view rendered durinf that request cycle.
     next();
 }; // locals object에 user의 정보를 저장해주는 middleware
+
+export const protectorMiddleware = (req, res, next) => {
+    // login이 false인 사용자는 로그인 페이지로 redirect할 수 있게하는 middleware
+    if (req.session.loggedIn) {
+        // user가 loggdeIn되어있으면 next()함수 호출
+        next();
+    } else {
+        res.redirect("/login");
+    }
+}
+
+export const publicOnlyMiddleware = (req, res, next) => {
+    // 로그인 되어있는 사용자들이 로그아웃된 사용자들만 접근 가능한 페이지로 가지 못하게하는 middleware
+    if (!req.session.loggedIn) {
+        next();
+    } else {
+        return res.redirect("/");
+    }
+}

@@ -11,13 +11,16 @@ html(lang="ko")
                     li 
                         a(href="/") Home &rarr;
                     if loggedIn
+                        // loggedIn은 localMiddleware에서 온 변수
                         // res.locals의 key를 사용할 수 있음
                         // res.locals.loggedIn이 true라면
+                        li
+                            a(href="/users/edit") Edit Profile &rarr;
                         li
                             a(href="/logout") Log out &rarr;
                             // log out menu 보여주고
                         li
-                            a(href="/profile") welcome #{loggedInUser.name}! &rarr;
+                            a(href="/my-profile") welcome #{loggedInUser.name}! &rarr;
                             // res.locas.loggedInUser에서 name의 value 불러오기
                     else
                         li 

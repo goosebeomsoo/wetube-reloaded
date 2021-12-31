@@ -152,13 +152,14 @@ export const deleteVideo = async (req, res) => {
     const { id } = req.params;
     await Video.findByIdAndDelete(id);
     // remove와 delete가 있지만 무조건 delete사용
-    console.log(id);
     return res.redirect("/");
 }
 
 export const search = async (req, res) => {
     const { keyword } = req.query;
+    // search form에서 입력되는 문자열 불러오기
     let videos = [];
+    // videos 변수에 빈 배열 선언
     if (keyword) {
         videos = await Video.find({
             title : {
@@ -166,6 +167,7 @@ export const search = async (req, res) => {
             },
         });
     }
+    console.log(videos);
     return res.render("search", {pageTitle : "Search", videos});
 }
 /*

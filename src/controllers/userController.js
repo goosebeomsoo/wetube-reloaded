@@ -143,6 +143,8 @@ export const startGithubLogin = (req, res) => {
     // finalUrl변수로 redirect
 }
 
+// 위 에서 보낸 유저가 github에서 Authorization을 누르면 아래 함수가 실행
+
 export const finishGithubLogin = async (req, res) => {
     // 소셜로그인 끝
     const baseUrl = "https://github.com/login/oauth/access_token";
@@ -189,7 +191,7 @@ export const finishGithubLogin = async (req, res) => {
         ).json();
         
         const emailObj = emailData.find(
-            (email) => email.primary === true && email.verified === true
+            email => email.primary === true && email.verified === true
         );
 
         if (!emailObj) {
@@ -197,8 +199,9 @@ export const finishGithubLogin = async (req, res) => {
         }
 
         let user = await User.findOne({ email : emailObj.email });
-        
+        // database users directory에서 email이 github에 가입한 email과 같은 user를 기준으로 user data 검색.
         if (!user) {
+            // users database의 email 정보와 github에 가입된 email 정보가 같지 않으면
             user = await User.create({
                 avatarUrl : userData.avatarUrl,
                 name : userData.name,
@@ -208,10 +211,15 @@ export const finishGithubLogin = async (req, res) => {
                 socialOnly : true,
                 location : userData.location,
             });
+            // user database에 새로 계정 생성
         } else {
+            // database에 동일한 email이 존재한다면
             req.session.loggedIn = true;
+            // session에 login 상태를 true로
             req.session.user = user;
+            // login된 user를 email이 같은 user로
             return res.redirect("/");
+            // home으로
         }
         // primary와 verified가 true라면 이메일로 로그인 허용
     } else {
@@ -229,10 +237,18 @@ export const finishGithubLogin = async (req, res) => {
 
 export const logout = (req, res) => {
     req.session.destroy();
+    // 연결 종료
     return res.redirect("/login");
 };
 
-export const edit = (req, res) => res.send("edit");
+export const getEdit = (req, res) => {
+    // Edit Profile page에 user의 저장 내용 렌더링
+    return res.render("edit-profile", {pageTitle : "Edit Profile" });
+}
+
+export const postEdit = (req, res) => {
+    return res.send("edit");
+};
 export const see = (req, res) => res.send("see");
 
 /*

@@ -1,0 +1,10 @@
+extends base
+
+block content
+    form(method="POST")
+        input(value=loggedInUser.email, placeholder="email", name="email", type="email", required)
+        input(value=loggedInUser.username, placeholder="username", name="username", type="text", required)
+        input(value=loggedInUser.name, placeholder="name", name="name", type="text", required)
+        input(value=loggedInUser.location, placeholder="location", name="location", type="text", required)
+        input(placeholder="submit", type="submit", value="Update Profile")
+        // password는 있는 유저가 있고 없는 유저가 있기때문에 따로 create

@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     // 같은 username과 email을 가진 계정이 존재하면 안되기때문에 unique : true를 적용해줌
     password : { type : String },
     name : { type : String, requried : true },
-    loation : String,
+    location : String,
 });
 
 userSchema.pre("save", async function() {

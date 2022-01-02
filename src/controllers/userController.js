@@ -247,6 +247,7 @@ export const getEdit = (req, res) => {
 }
 
 export const postEdit = async (req, res) => {
+    // user의 정보를 update해주는 함수
     const {
         session : {
             user : { _id },
@@ -258,15 +259,51 @@ export const postEdit = async (req, res) => {
             location,
         } // == const { email, username, name, location } = req.body;
     } = req; // == const { id } = req.session.user;
-    await User.findByIdAndUpdate( _id, {
+    // edit-profile page form에서 user의 입력된 정보를 변수로 선언, database에 저장된 user의 id를 변수로 선언
+
+    
+    
+    /*
+    req.session.user = {
+        ...req.session.user,
+        // req.session.user안의 내용을 밖으로 꺼내줌
         name,
         email,
         username,
         location,
-    });
+    };
+    */
 
-    
-    res.render("edit-profile");
+   
+   // user database에 이미 존재하는 user의 username 값 중 요청한 user의 usename과 일치하면 true
+   // 요청하고 있는 user는 user database에서 검색을 포함시키면 안됨
+   const existsUsername = await User.exists({
+       _id : {$nin : _id},
+       username,
+      // id값이 다른 user중에서 입력한 username과 같은 사람 찾기
+   });
+   
+    if (existsUsername) {
+        // user database에 이미 존재하는 username이라면
+            return res.status(400).render("edit-profile", {
+                pageTitle : "Edit Profile",
+                errorMessage : "Exists Username",
+            });
+    };
+
+    const updatedUser = await User.findByIdAndUpdate( _id,
+        {
+        name,
+        email,
+        username,
+        location,
+        // database에 저장된 유저의 id값으로 user를 찾고 edit-profile 페이지에 user가 입력한 정보로 수정
+        },
+        { new : true }
+    );
+
+    req.session.user = updatedUser;
+    return res.redirect("/users/edit");
 };
 
 export const see = (req, res) => res.send("see");

@@ -11,6 +11,7 @@ import {
     search } 
     from "../controllers/videoController";
 import { 
+    protectorMiddleware,
     publicOnlyMiddleware } 
     from "../middleware";
 

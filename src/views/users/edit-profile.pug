@@ -1,4 +1,4 @@
-extends base
+extends ../base.pug
 
 block content
     if errorMessage
@@ -10,3 +10,7 @@ block content
         input(value=loggedInUser.location, placeholder="location", name="location", type="text", required)
         input(placeholder="submit", type="submit", value="Update Profile")
         // password는 있는 유저가 있고 없는 유저가 있기때문에 따로 create
+        
+        if !loggedInUser.socialOnly
+            hr
+            a(href="change-password") Change Password &rarr;

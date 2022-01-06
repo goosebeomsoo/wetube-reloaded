@@ -243,7 +243,7 @@ export const logout = (req, res) => {
 
 export const getEdit = (req, res) => {
     // Edit Profile page에 user의 저장 내용 렌더링
-    return res.render("edit-profile", {pageTitle : "Edit Profile" });
+    return res.render("users/edit-profile", {pageTitle : "Edit Profile" });
 }
 
 export const postEdit = async (req, res) => {
@@ -282,10 +282,10 @@ export const postEdit = async (req, res) => {
        username,
       // id값이 다른 user중에서 입력한 username과 같은 사람 찾기
    });
-   
+
     if (existsUsername) {
         // user database에 이미 존재하는 username이라면
-            return res.status(400).render("edit-profile", {
+            return res.status(400).render("users/edit-profile", {
                 pageTitle : "Edit Profile",
                 errorMessage : "Exists Username",
             });
@@ -305,6 +305,46 @@ export const postEdit = async (req, res) => {
     req.session.user = updatedUser;
     return res.redirect("/users/edit");
 };
+
+export const getChanagePassword = (req,res) => {
+    if (req.session.user.socialOnly === true) {
+        return res.redirect("/");
+    }
+    return res.render("users/change-password", {pageTitle : "Change Password"});
+}
+export const postChanagePassword = async (req,res) => {
+    // send notification
+    const {
+        session : {
+            user : { _id },
+        },
+        body : {
+            oldPassword,
+            newPassword,
+            newPasswordCheck,
+        }
+    } = req;
+    const user = await User.findById(_id);
+    // 현재 접속한 user의 정보를 user 변수에 선언
+    const ok = await bcrypt.compare(oldPassword, user.password);
+    // 사용자가 form으로 보낸 비밀번호와, session에 있는 비밀번호를 비교
+    
+    if (!ok) {
+        res.status(400).render("users/change-password", {pageTitle : "Change Password", errorMessage : "The Current password is incorrect"});
+        // 사용자가 form으로 보내어 변경한 비밀번호와 기존 사용자의 비밀번호가 같지 않으면 에러메세지
+    }
+    if(newPassword !== newPasswordCheck) {
+        res.status(400).render("users/change-password", {pageTitle : "Change Password", errorMessage : "The Password does not match"});
+        // 새로운 비밀번호가 확인이 안될 경우 에러메세지
+    }
+    user.password = newPassword;
+    // 사용자의 비밀번호를 form에 입력된 새로운 비밀번호로 변경
+    await user.save();
+    // 새로운 비밀번호를 해시값으로 저장
+
+    return res.redirect("/users/logout");
+    // 비밀번호 변경후 로그아웃
+}
 
 export const see = (req, res) => res.send("see");
 

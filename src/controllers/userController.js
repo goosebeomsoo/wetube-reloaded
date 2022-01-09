@@ -250,19 +250,20 @@ export const postEdit = async (req, res) => {
     // user의 정보를 update해주는 함수
     const {
         session : {
-            user : { _id },
+            user : { 
+                _id, 
+                avatarUrl 
+            },
         },
         body : {
             name, 
             email, 
             username,
             location,
-        } // == const { email, username, name, location } = req.body;
+        }, // == const { email, username, name, location } = req.body;
+        file,
     } = req; // == const { id } = req.session.user;
-    // edit-profile page form에서 user의 입력된 정보를 변수로 선언, database에 저장된 user의 id를 변수로 선언
-
-    
-    
+    // edit-profile page form에서 user의 입력된 정보를 변수로 선언, database에 저장된 user의 id를 변수로 선언   
     /*
     req.session.user = {
         ...req.session.user,
@@ -290,14 +291,17 @@ export const postEdit = async (req, res) => {
                 errorMessage : "Exists Username",
             });
     };
-
+    console.log(req.session.user);
     const updatedUser = await User.findByIdAndUpdate( _id,
         {
-        name,
-        email,
-        username,
-        location,
-        // database에 저장된 유저의 id값으로 user를 찾고 edit-profile 페이지에 user가 입력한 정보로 수정
+            avatarUrl : file ? file.path : avatarUrl,
+            // file이 존재하지 않으면 file.path를 사용할 수 없음
+            // upload 한 파일이 존재하면 upload한 파일을 새 파일로, 없다면 기존 avataUrl사용
+            name,
+            email,
+            username,
+            location,
+            // database에 저장된 유저의 id값으로 user를 찾고 edit-profile 페이지에 user가 입력한 정보로 수정
         },
         { new : true }
     );
@@ -327,24 +331,27 @@ export const postChanagePassword = async (req,res) => {
     const user = await User.findById(_id);
     // 현재 접속한 user의 정보를 user 변수에 선언
     const ok = await bcrypt.compare(oldPassword, user.password);
-    // 사용자가 form으로 보낸 비밀번호와, session에 있는 비밀번호를 비교
+    // 사용자가 for m으로 보낸 비밀번호와, session에 있는 비밀번호를 비교
     
     if (!ok) {
         res.status(400).render("users/change-password", {pageTitle : "Change Password", errorMessage : "The Current password is incorrect"});
         // 사용자가 form으로 보내어 변경한 비밀번호와 기존 사용자의 비밀번호가 같지 않으면 에러메세지
-    }
-    if(newPassword !== newPasswordCheck) {
-        res.status(400).render("users/change-password", {pageTitle : "Change Password", errorMessage : "The Password does not match"});
-        // 새로운 비밀번호가 확인이 안될 경우 에러메세지
-    }
-    user.password = newPassword;
-    // 사용자의 비밀번호를 form에 입력된 새로운 비밀번호로 변경
-    await user.save();
-    // 새로운 비밀번호를 해시값으로 저장
-
-    return res.redirect("/users/logout");
-    // 비밀번호 변경후 로그아웃
-}
+    } else {
+        if(newPassword !== newPasswordCheck) {
+            res.status(400).render("users/change-password", {pageTitle : "Change Password", errorMessage : "The Password does not match"});
+            // 새로운 비밀번호가 확인이 안될 경우 에러메세지
+        } else {
+            user.password = newPassword;
+            // 사용자의 비밀번호를 form에 입력된 새로운 비밀번호로 변경
+            await user.save();
+            // 새로운 비밀번호를 해시값으로 저장
+            
+            req.session.destroy();
+            return res.redirect("/login");
+            // 비밀번호 변경후 로그아웃
+        };
+    };
+};
 
 export const see = (req, res) => res.send("see");
 

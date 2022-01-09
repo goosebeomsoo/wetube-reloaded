@@ -1,3 +1,5 @@
+import multer from "multer";
+
 export const localsMiddleware = (req, res, next) => {
     res.locals.loggedIn = Boolean(req.session.loggedIn);
     // response할 때 login상태를 요청할때 session에 저장된 loggin 상태로 locals object에 저장, 참 일 경우 loggedInUser에 로그인한 유저의 정보를 저장한다.
@@ -28,3 +30,6 @@ export const publicOnlyMiddleware = (req, res, next) => {
         return res.redirect("/");
     }
 }
+
+export const uploadFiles = multer({ dest : "uploads/" });
+// user가 upload한 파일을 upload file에 모두 저장하도록 설정

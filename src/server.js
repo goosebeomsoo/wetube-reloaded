@@ -11,7 +11,6 @@ import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 // videoRouter.js 파일에서 videoRouter 불러오기
 import userRouter from "./routers/userRouter";
-import { use } from "bcrypt/promises";
 // userRouter.js 파일에서 userRouter 불러오기
 import { localsMiddleware } from "./middleware";
 // middleware.js 파일에서 localsMiddleware 불러오기
@@ -82,6 +81,8 @@ app.use("/videos", videoRouter);
 // url "/videos"에 videoRouter 함수 적용
 app.use("/users", userRouter);
 // url "/users"에 userRouter 함수 적용
+app.use("/uploads", express.static("uploads"));
+// static file serving 폴더 전체를 브라우저에게 노출 시킴
 
 
 export default app;

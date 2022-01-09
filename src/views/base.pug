@@ -24,6 +24,8 @@ html(lang="ko")
                             // res.locas.loggedInUser에서 name의 value 불러오기
                         li 
                             a(href="/videos/upload") Upload Video &rarr;
+                        li
+                            a(href=`/users/${loggedInUser._id}`) My Profile &rarr;
                     else
                         li 
                             a(href="/join") Join &rarr;

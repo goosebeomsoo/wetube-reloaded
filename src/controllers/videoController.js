@@ -123,12 +123,20 @@ export const getUpload = (req, res) => {
 };
 
 export const postUpload = async (req, res) => {
-    const {title, description, hashtags} = req.body;
+    const {
+        body : {
+            title, 
+            description, 
+            hashtags
+        },
+    } = req;
+    const { path : fileUrl } = req.file
     // /video/upload 경로 body안에 있는 form의 형식을 읽어줌
         try {
             await Video.create({
             title, // = title
-            description, // description
+            description,
+            fileUrl, // description
             hashtags : Video.formatHashtags(hashtags),
             // mongoose가 고유 id도 부여해줌
             });

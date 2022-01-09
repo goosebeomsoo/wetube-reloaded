@@ -31,5 +31,19 @@ export const publicOnlyMiddleware = (req, res, next) => {
     }
 }
 
-export const uploadFiles = multer({ dest : "uploads/" });
+export const avatarUpload = multer({ 
+    dest : "uploads/avatars", 
+    limits : {
+    filesize : 3000000,
+    }
+});
+// avatar image file의 용량을 맥시멈 3MB로 
+
+export const videoUpload = multer({
+    dest : "uploads/videos", 
+    limits : {
+    filesize : 10000000,
+    }
+});
+// avatar image file의 용량을 맥시멈 10MB로 
 // user가 upload한 파일을 upload file에 모두 저장하도록 설정

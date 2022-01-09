@@ -5,6 +5,7 @@ const videoSchema = new mongoose.Schema({
     // video schema model 생성
     title : { type : String, required : true, trim : true, maxLength : 80},
         // title의 데이터 타입을 문자열로
+    fileUrl : { type : String, required : true },
     description : { type : String, required : true, trim : true, minLength : 20, maxLength : 140}, 
     createdAt : { type : Date, required : true, default : Date.now },
         // date의 경우 따로 input 태그 안에 required를 적을 수 없으므로 model에 required 작성

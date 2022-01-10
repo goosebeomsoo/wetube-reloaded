@@ -18,7 +18,10 @@ const videoSchema = new mongoose.Schema({
         rating : { type : Number, default : 0, required : true },
         // rating의 데이터 타입을 숫자로
     },
+    owner : { type : mongoose.Schema.Types.ObjectId, required : true, ref : "User"},
+    // ObjectId는 javascript에서 제공하지 않고 mongoose에서 제공
     // mongoose에게 data type을 구체적으로 작성할수록 더 편리함
+    // 많은 비디오들을 담을 수 있으니 배열로 구성
 });
 // video 모델의 형태 정립
 

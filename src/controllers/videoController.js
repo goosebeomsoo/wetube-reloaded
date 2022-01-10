@@ -1,4 +1,5 @@
 import Video from "../models/video";
+import User from "../models/user";
 
 export const home = async (req, res) => {
     // promise
@@ -46,9 +47,11 @@ export const watch = async (req, res) => {
     const { id } = req.params;
     // req.params는 router가 주는 express의 기능
     // express가 임의로 부여한 id를 변수로 지정
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("owner");
     // 부여된 아이디로 video의 정보를 불러올 수 있음
     // findById는 id로 영상을 찾을 수 있게 지원해준다.
+    // const owner = await User.findById(video.owner);
+    // populate가 owner의 부분을 user의 정보로 채워줌
     if (!video) {
         // dababase에 저장된 video data의 id 값이 일치하지않다면
         return res.status(404).render("404", {
@@ -62,6 +65,7 @@ export const watch = async (req, res) => {
         return res.render("watch", {
             pageTitle: video.title,
             video,
+            // owner,
         });
         // 비디오 출력
     };
@@ -69,16 +73,30 @@ export const watch = async (req, res) => {
 
 export const getEdit = async (req, res) => {
     // /:id([0-9a-f]{24})/edit 경로에 비디오 수정 페이지 출력
-    const { id } = req.params;
+    const {
+        params : {
+            id,
+        },
+        session : {
+            user : {
+                _id,
+            }
+        }
+    } = req;
     // 요청된 url에 임의로 부여된 id값을 변수에 저장
     const video = await Video.findById(id);
     // id값으로 데이터 정보 찾기
+
+    console.log(typeof video.owner, typeof _id)
     if (!video) {
         // id값이 일치하지 않다면
         return res.status(404).render("404", {
             pageTitle : "Video not found.",
         });
     } else {
+        if (String(video.owner) !== String(_id)) {
+            return res.status(403).redirect("/");
+        }
         return res.render("edit", {
             pageTitle : `Edit ${video.title}`,
             video
@@ -124,40 +142,61 @@ export const getUpload = (req, res) => {
 
 export const postUpload = async (req, res) => {
     const {
+        session : {
+                user : { _id }
+        },
         body : {
             title, 
             description, 
             hashtags
         },
-    } = req;
-    const { path : fileUrl } = req.file
-    // /video/upload 경로 body안에 있는 form의 형식을 읽어줌
-        try {
-            await Video.create({
-            title, // = title
-            description,
-            fileUrl, // description
-            hashtags : Video.formatHashtags(hashtags),
-            // mongoose가 고유 id도 부여해줌
-            });
-
-            const videoTitle = await Video.findOne({title});
-            const videoId = videoTitle.id;
-            console.log(videoId);
-            // promise를 return
-            return res.redirect(`/videos/${videoId}`);
-        } catch(error) {
-            console.log(error);
-            return res.status(400).render("upload", {
-                pageTitle : "Upload Video",
-                errorMessage : error._message,
-            });
+        file : {
+            path : fileUrl,
         }
-        // 홈으로 돌아가기}
+    } = req;
+
+    try {
+        const newVideo = await Video.create({
+            // mongoose가 고유 id도 부여
+            title,
+            description,
+            fileUrl,
+            owner : _id,
+            hashtags : Video.formatHashtags(hashtags),
+        });
+        const user = await User.findById(_id);
+        user.videos.push(newVideo._id);
+        user.save();
+        return res.redirect(`/`);
+    } catch(error) {
+        console.log(error);
+        return res.status(400).render("upload", {
+            pageTitle : "Upload Video",
+            errorMessage : error._message,
+        });
+    };
 };
 
 export const deleteVideo = async (req, res) => {
-    const { id } = req.params;
+    const {
+        params : {
+            id,
+        },
+        session : {
+            user : {
+                _id,
+            }
+        }
+    } = req;
+    const video = await Video.findById(id);
+    if (!video) {
+        return res.status(404).render("404", {
+            pageTitle : "Video not found.",
+        });
+    }
+    if (String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
+    }
     await Video.findByIdAndDelete(id);
     // remove와 delete가 있지만 무조건 delete사용
     return res.redirect("/");

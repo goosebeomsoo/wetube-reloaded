@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon --exec babel-node src/init.js",
-    "assets" : "webpack --config webpack.config.json"
+    "assets": "webpack --config webpack.config.js"
   },
   "author": "Goosebeomsoo",
   "license": "ISC",
@@ -32,6 +32,7 @@
     "@babel/core": "^7.16.0",
     "@babel/node": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
+    "babel-loader": "^8.2.3",
     "nodemon": "^2.0.15",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1"

@@ -74,15 +74,15 @@ Cookie component
 
 app.use(localsMiddleware);
 // locals middleware가 session middleware 다음에 와야 session object에 접근할 수 있음
-
+app.use("/uploads", express.static("uploads"));
+// static file serving 폴더 전체를 브라우저에게 노출 시킴
+app.use("/static", express.static("assets"));
 app.use("/", rootRouter);
 // url "/"에 globalRouter 함수 적용
 app.use("/videos", videoRouter);
 // url "/videos"에 videoRouter 함수 적용
 app.use("/users", userRouter);
 // url "/users"에 userRouter 함수 적용
-app.use("/uploads", express.static("uploads"));
-// static file serving 폴더 전체를 브라우저에게 노출 시킴
 
 
 export default app;

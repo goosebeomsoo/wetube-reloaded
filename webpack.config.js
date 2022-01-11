@@ -24,6 +24,10 @@ module.exports = {
                     },
                 },
             },
+            {
+                test : /\.scss$/,
+                use : ["style-loader", "css-loader", "sass-loader"],
+            }
         ],
     },
      // 우리가 처리하고자하는 파일

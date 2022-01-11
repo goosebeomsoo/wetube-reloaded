@@ -13,10 +13,12 @@ module.exports = {
         filename : "css/styles.css" 
     })],
     mode : "development",
+    watch : true,
     output : {
         filename : "js/main.js",
         path : path.resolve(__dirname, "assets"),
         // absolute path로 적어야함 : 처음부터 끝까지의 경로로
+        clean : true,
     },
     module : {
         rules : [

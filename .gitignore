@@ -2,3 +2,5 @@
 .env
 weather.html
 /uploads
+.DS_Store
+/assets

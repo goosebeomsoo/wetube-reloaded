@@ -1,0 +1,30 @@
+header
+    a(href="/")
+        i.fab.fa-youtube
+    nav
+        ul 
+            li 
+                a(href="/") Home &rarr;
+            if loggedIn
+                // loggedIn은 localMiddleware에서 온 변수
+                // res.locals의 key를 사용할 수 있음
+                // res.locals.loggedIn이 true라면
+                li
+                    a(href="/users/edit") Edit Profile &rarr;
+                li
+                    a(href="/users/logout") Log out &rarr;
+                    // log out menu 보여주고
+                li
+                    a(href="/my-profile") welcome #{loggedInUser.name}! &rarr;
+                    // res.locas.loggedInUser에서 name의 value 불러오기
+                li 
+                    a(href="/videos/upload") Upload Video &rarr;
+                li
+                    a(href=`/users/${loggedInUser._id}`) My Profile &rarr;
+            else
+                li 
+                    a(href="/join") Join &rarr;
+                li 
+                    a(href="/login") Login &rarr;
+            li 
+                a(href="/search") Search &rarr;

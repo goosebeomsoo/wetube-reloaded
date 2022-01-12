@@ -1,0 +1,15 @@
+.search__form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 60px;
+    position: relative;
+
+    button {
+        all: unset;
+        position: absolute;
+        right: 15px;
+        font-size: 18px;
+        text-align: center;
+        cursor: pointer;
+    }
+}

@@ -2,12 +2,13 @@ extends base.pug
 include mixins/video
 
 block content
-    each video in videos
-        // videos 수만큼 렌더링
-        +video(video)
-        // videos는 videosController의 변수와 같아야함
-        // video는 리스트 별 변수
-        // 통상적으로는 단수와 복수로 사용
-        // 위 list들을 포함한 video가 배열의 수만큼 반복 된다.
-    else
-        li Sorry nothing found
+    div.videos__grid
+        each video in videos
+            // videos 수만큼 렌더링
+            +video(video)
+            // videos는 videosController의 변수와 같아야함
+            // video는 리스트 별 변수
+            // 통상적으로는 단수와 복수로 사용
+            // 위 list들을 포함한 video가 배열의 수만큼 반복 된다.
+        else
+            span.empty__message No videos found

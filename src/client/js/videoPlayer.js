@@ -3,8 +3,9 @@ import "../scss/styles.scss";
 const video = document.querySelector("video");
 const playBtn = document.querySelector("#play");
 const muteBtn = document.querySelector("#mute");
-const time = document.querySelector("#time");
 const volumeRange = document.querySelector("#volume");
+const currenTime = document.querySelector("#currenTime");
+const totalTime = document.querySelector("#totalTime");
 
 let volumeValue = 0.5;
 video.volume = volumeValue;
@@ -42,6 +43,16 @@ const handleVolumeChange = (event) => {
     video.volume = value;
 }
 
+const handleLoadedMetadata = () => {
+    totalTime.innerText = Math.floor(video.duration);
+};
+
+const handleTimeUpdate = () => {
+    currenTime.innerText = Math.floor(video.currentTime);
+}
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
+video.addEventListener("loadedmetadata", handleLoadedMetadata);
+video.addEventListener("timeupdate", handleTimeUpdate);

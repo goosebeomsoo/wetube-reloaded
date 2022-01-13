@@ -48,10 +48,9 @@ export const watch = async (req, res) => {
     // req.params는 router가 주는 express의 기능
     // express가 임의로 부여한 id를 변수로 지정
     const video = await Video.findById(id).populate("owner");
-    // 부여된 아이디로 video의 정보를 불러올 수 있음
-    // findById는 id로 영상을 찾을 수 있게 지원해준다.
     // const owner = await User.findById(video.owner);
     // populate가 owner의 부분을 user의 정보로 채워줌
+    console.log(video);
     if (!video) {
         // dababase에 저장된 video data의 id 값이 일치하지않다면
         return res.status(404).render("404", {

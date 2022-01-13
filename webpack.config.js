@@ -8,14 +8,18 @@ const path = require("path");
 // path.resolve는 입력하는 파트들을 모아서 경로로 만들어줌.
 console.log(path.resolve(__dirname, "assets","js"));
 module.exports = {
-    entry : "./src/client/js/main.js",
+    entry : {
+        main : "./src/client/js/main.js",
+        videoPlayer : "./src/client/js/videoPlayer.js",
+    },
     plugins : [new MiniCssExtractPlugin({ 
         filename : "css/styles.css" 
     })],
     mode : "development",
     watch : true,
     output : {
-        filename : "js/main.js",
+        filename : "js/[name].js",
+        // [name]이라고 적어두면 entry에 있는 이름을 가져감
         path : path.resolve(__dirname, "assets"),
         // absolute path로 적어야함 : 처음부터 끝까지의 경로로
         clean : true,

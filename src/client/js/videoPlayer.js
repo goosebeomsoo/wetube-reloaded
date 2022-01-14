@@ -2,12 +2,15 @@ import "../scss/styles.scss";
 
 const video = document.querySelector("video");
 const playBtn = document.querySelector("#play");
+const playBtnIcon = document.querySelector("#playIcon");
 const muteBtn = document.querySelector("#mute");
+const muteBtnIcon = document.querySelector("#muteIcon");
 const volumeRange = document.querySelector("#volume");
 const currenTime = document.querySelector("#currenTime");
 const totalTime = document.querySelector("#totalTime");
 const timeline = document.querySelector("#timeline");
 const fullScreenBtn = document.querySelector("#fullScreenBtn");
+const fullScreenBtnIcon = document.querySelector("#fullScreenBtnIcon");
 const videoContainer = document.querySelector("#videoContainer");
 const videoControls = document.querySelector("#videoControls");
 
@@ -22,7 +25,7 @@ const handlePlayClick = (e) => {
     } else {
         video.pause();
     };
-    playBtn.innerText = video.paused ? "Play" : "Pause";
+    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 
 const handleMute = (e) => {
@@ -31,7 +34,7 @@ const handleMute = (e) => {
     } else {
         video.muted = true;
     }
-    muteBtn.innerText = video.muted ? "Unmute" : "Mute";
+    muteBtnIcon.classList = video.muted ? "fas fa-volume-mute" : "fas fa-volume-up";
     volumeRange.value = video.muted ? 0 : volumeValue;
 }
 
@@ -75,11 +78,12 @@ const handleFullscreen = () => {
     const fullscreen = document.fullscreenElement;
     if(fullscreen) {
         document.exitFullscreen();
-        fullScreenBtn.innerText = "Full"; 
+        fullScreenBtnIcon.classList = "fas fa-expand"; 
     } else {
         videoContainer.requestFullscreen();
-        fullScreenBtn.innerText = "Exit";
+        fullScreenBtnIcon.classList = "fas fa-compress";
     }
+    
 }
 
 const hideControls = () => videoControls.classList.remove("showing");
@@ -111,3 +115,13 @@ timeline.addEventListener("input", handleTimeChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
+document.addEventListener("keypress", (e)=> {
+ if(e.keyCode === 32) {
+    if(video.paused) {
+        video.play();
+    } else {
+        video.pause();
+    };
+    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
+ }
+});

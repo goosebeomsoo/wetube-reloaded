@@ -92,6 +92,7 @@ video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  box-sizing: border-box;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -269,6 +270,74 @@ input[type=submit],
 .social-login .social__btn--github {
   background: transparent;
   color: azure;
+}
+
+#videoContainer {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+#videoContainer video {
+  width: 100%;
+}
+#videoContainer button {
+  all: unset;
+}
+#videoContainer button i {
+  font-size: 18px;
+}
+#videoContainer #videoControls.showing {
+  opacity: 1;
+}
+#videoContainer #videoControls {
+  opacity: 0;
+  transition: 0.5s ease-in-out;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 25px 25px 50px;
+  display: flex;
+  background: rgba(0, 0, 0, 0.5);
+}
+#videoContainer #videoControls #play {
+  width: 3%;
+  text-align: center;
+}
+#videoContainer #videoControls #duration span {
+  font-size: 12px;
+}
+#videoContainer #videoControls #timeline {
+  position: relative;
+  width: 91%;
+}
+#videoContainer #videoControls #timeline #duration {
+  position: absolute;
+  top: 22px;
+  left: 5px;
+}
+#videoContainer #videoControls #timeline input {
+  width: 97%;
+  display: block;
+  margin: 0;
+}
+#videoContainer #videoControls #volumeControls {
+  position: relative;
+  display: flex;
+  width: 3%;
+}
+#videoContainer #videoControls #volumeControls input {
+  position: absolute;
+  display: block;
+  transform: rotateZ(-90deg);
+  left: -55px;
+  bottom: 80px;
+}
+#videoContainer #videoControls #volumeControls button {
+  display: block;
+}
+#videoContainer #videoControls #fullScreen {
+  width: 3%;
+  text-align: right;
 }
 
 .search__form {

@@ -105,16 +105,24 @@ const handleMouseLeave =  () => {
     controlsTimeout = setTimeout(hideControls, 3000);
 };
 
-playBtn.addEventListener("click", handlePlayClick);
-muteBtn.addEventListener("click", handleMute);
+const handleEnded = () => {
+    const { id } = videoContainer.dataset;
+    fetch(`/api/videos/${id}/view`, {
+        method : "POST",
+    });
+}
+
 video.addEventListener("click", handlePlayClick);
-volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
-timeline.addEventListener("input", handleTimeChange);
-fullScreenBtn.addEventListener("click", handleFullscreen);
+video.addEventListener("ended", handleEnded);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
+playBtn.addEventListener("click", handlePlayClick);
+muteBtn.addEventListener("click", handleMute);
+volumeRange.addEventListener("input", handleVolumeChange);
+timeline.addEventListener("input", handleTimeChange);
+fullScreenBtn.addEventListener("click", handleFullscreen);
 document.addEventListener("keypress", (e)=> {
  if(e.keyCode === 32) {
     if(video.paused) {

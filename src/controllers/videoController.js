@@ -220,3 +220,16 @@ export const search = async (req, res) => {
 pug
 - returning HTML
 */
+
+export const registerView = async (req, res) => {
+    const { id } = req.params;
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.sendStatus(404);
+    }
+    video.meta.views = video.meta.views + 1;
+    await video.save();
+    return res.sendStatus(200);
+    // status는 render하기 전에 상태코드를 정할 수 있는 것
+    // sendStatus는 상태코드를 보내고 연결을 끊는 것
+}

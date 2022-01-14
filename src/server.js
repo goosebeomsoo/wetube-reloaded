@@ -13,7 +13,8 @@ import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
 // userRouter.js 파일에서 userRouter 불러오기
 import { localsMiddleware } from "./middleware";
-// middleware.js 파일에서 localsMiddleware 불러오기
+// middleware.js 파일에서 localsMiddleware 불러
+import apiRouter from "./routers/apiRouter";
 
 const app = express();
 // setting variable for express
@@ -83,6 +84,7 @@ app.use("/videos", videoRouter);
 // url "/videos"에 videoRouter 함수 적용
 app.use("/users", userRouter);
 // url "/users"에 userRouter 함수 적용
+app.use("/api", apiRouter);
 
 
 export default app;

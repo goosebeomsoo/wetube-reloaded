@@ -1,27 +1,25 @@
 // 오래된 JavaScript Version만 인식을함
 // entry -> 우리가 처리하고자하는 파일
-console.log(typeof __dirname);
-// __dirname : 파일까지의 전체경로
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // css를 추출해서 별도의 파일로 만들어줌
 const path = require("path");
 // path.resolve는 입력하는 파트들을 모아서 경로로 만들어줌.
 console.log(path.resolve(__dirname, "assets","js"));
+// __dirname : 파일까지의 전체경로
 module.exports = {
     entry : {
         main : "./src/client/js/main.js",
         videoPlayer : "./src/client/js/videoPlayer.js",
+        recorder : "./src/client/js/recorder.js",
     },
     plugins : [new MiniCssExtractPlugin({ 
-        filename : "css/styles.css" 
+        filename : "css/styles.css", 
     })],
-    mode : "development",
+    mode : "development", // 개발중 모드 설정
     watch : true,
     output : {
-        filename : "js/[name].js",
-        // [name]이라고 적어두면 entry에 있는 이름을 가져감
-        path : path.resolve(__dirname, "assets"),
-        // absolute path로 적어야함 : 처음부터 끝까지의 경로로
+        filename : "js/[name].js", // [name]이라고 적어두면 entry에 있는 이름을 가져감
+        path : path.resolve(__dirname, "assets"), // absolute path로 적어야함 : 처음부터 끝까지의 경로로
         clean : true,
     },
     module : {

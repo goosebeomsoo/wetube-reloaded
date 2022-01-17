@@ -14,6 +14,7 @@ const fullScreenBtnIcon = document.querySelector("#fullScreenBtnIcon");
 const videoContainer = document.querySelector("#videoContainer");
 const videoControls = document.querySelector("#videoControls");
 
+// global variables
 let controlsTimeout = null;
 let controlsMovementTimeout = null;
 let volumeValue = 0.5;
@@ -65,13 +66,14 @@ const handleTimeUpdate = () => {
     timeline.value = Math.floor(video.currentTime);
 }
 
-const handleTimeChange =(event)=> {
+const handleTimeChange = (event) => {
     const {
         target : {
             value
         }
     } = event;
     video.currentTime = value;
+    console.log(video.currentTime, value);
 }
 
 const handleFullscreen = () => {
@@ -105,6 +107,17 @@ const handleMouseLeave =  () => {
     controlsTimeout = setTimeout(hideControls, 3000);
 };
 
+const handleKeypress = (e) => {
+    e.keyCode === 32;
+
+    if(video.paused) {
+        video.play();
+    } else {
+        video.pause();
+    };
+    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
+}
+
 const handleEnded = () => {
     const { id } = videoContainer.dataset;
     fetch(`/api/videos/${id}/view`, {
@@ -116,20 +129,17 @@ video.addEventListener("click", handlePlayClick);
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 video.addEventListener("ended", handleEnded);
+
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
+
 volumeRange.addEventListener("input", handleVolumeChange);
+
 timeline.addEventListener("input", handleTimeChange);
+
 fullScreenBtn.addEventListener("click", handleFullscreen);
-document.addEventListener("keypress", (e)=> {
- if(e.keyCode === 32) {
-    if(video.paused) {
-        video.play();
-    } else {
-        video.pause();
-    };
-    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
- }
-});
+
+document.addEventListener("keypress", handleKeypress);

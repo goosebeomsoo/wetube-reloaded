@@ -306,19 +306,17 @@ input[type=submit],
 #videoContainer #videoControls #duration span {
   font-size: 12px;
 }
-#videoContainer #videoControls #timeline {
+#videoContainer #videoControls #timeInput {
   position: relative;
   width: 100%;
 }
-#videoContainer #videoControls #timeline #duration {
+#videoContainer #videoControls #timeInput #duration {
   position: absolute;
   top: 22px;
   left: 5px;
 }
-#videoContainer #videoControls #timeline input {
-  width: 97%;
-  display: block;
-  margin: 0;
+#videoContainer #videoControls #timeInput #timeline {
+  position: absolute;
 }
 #videoContainer #videoControls #volumeControls {
   position: relative;

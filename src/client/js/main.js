@@ -1,3 +1,3 @@
 import "../scss/styles.scss";
-
-console.log("hey");
+import regeneratorRuntime from "regenerator-runtime";
+// Standalone runtime for Regenerator-compiled generator and async functions.

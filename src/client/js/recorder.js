@@ -3,14 +3,21 @@ const startBtn = document.querySelector("#startBtn");
 
 let stream;
 let recorder;
-const handleDownload = () => {
+let videoFile;
 
+const handleDownload = () => {
+    const a = document.createElement("a");
+    a.href = videoFile;
+    a.download = "MyRecording.webm";
+    document.body.appendChild(a);
+    a.click();
+    // The HTMLAnchorElement.download property is a DOMString indicating that the linked resource is intended to be downloaded rather than displayed in the browser.
 }
 
 const handleStop = () => {
     startBtn.innerText = "Download Video";
     startBtn.removeEventListener("click", handleStop);
-    startBtn.addEventListener("click", handleStart);
+    startBtn.addEventListener("click", handleDownload);
     recorder.stop();
     // Stops recording, at which point a dataavailable event containing the final Blob of saved data is fired. No more recording occurs.
     // BLOB (Binary Large Object) : 이진 데이터 모임.
@@ -21,12 +28,13 @@ const handleStart = () => {
     startBtn.removeEventListener("click", handleStart);
     startBtn.addEventListener("click", handleStop);
 
-    recorder = new MediaRecorder(stream);
+    recorder = new MediaRecorder(stream, {mimeType : "video/webm"});
     // creates a new MediaRecorder object that will record a specified MediaStream
     recorder.ondataavailable = (e) => {
-        const videoFile = URL.createObjectURL(e.data)
+        videoFile = URL.createObjectURL(e.data)
         video.srcObject = null;
         video.src = videoFile;
+        video.loop = true;
         video.play();
         // The URL.createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
         // 파일을 가리키고 있는 url
@@ -45,7 +53,7 @@ const init = async () => {
             height : 100,
         },
     })
-    video.srcObject = null;
+    video.srcObject = stream;
     // srcObject는 MediaStream, MediaSource, Blob, File을 실행할 때 video에 주는 무언가
     video.play();
 };

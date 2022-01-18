@@ -75,6 +75,11 @@ Cookie component
 
 app.use(localsMiddleware);
 // locals middleware가 session middleware 다음에 와야 session object에 접근할 수 있음
+app.use((req,res,next) => {
+    res.header("Cross-Origin-Embedder-Policy", "require-corp");
+    res.header("Cross-Origin-Opener-Policy", "same-origin");
+    next();
+});
 app.use("/uploads", express.static("uploads"));
 // static file serving 폴더 전체를 브라우저에게 노출 시킴
 app.use("/static", express.static("assets"));

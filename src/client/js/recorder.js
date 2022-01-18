@@ -1,3 +1,6 @@
+// Video Recording
+import {createFFmpeg, fetchFile} from "@ffmpeg/ffmpeg";
+
 const video = document.querySelector("#preview");
 const startBtn = document.querySelector("#startBtn");
 
@@ -5,7 +8,23 @@ let stream;
 let recorder;
 let videoFile;
 
-const handleDownload = () => {
+const handleDownload = async () => {
+    const ffmpeg = createFFmpeg({ 
+        corePath: "https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js",
+        log:true
+     });
+    await ffmpeg.load();
+    // User가 JavaScript가 아닌 설치된 프로그램을 이용하기때문에 await 사용
+
+    ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
+    // writeFile은 ffmpeg에 가상의 파일을 생성해줌
+    await ffmpeg.run("-i", "recording.webm", "-r", "60", "ouput.mp4");
+    // unsigned integer은 양의 정수를 의미
+    // signed 음의 정수
+    const mp4File = ffmpeg.FS("readFile", "output.mp4");
+    console.log(mp4File);
+    console.log(mp4File.buffer);
+
     const a = document.createElement("a");
     a.href = videoFile;
     a.download = "MyRecording.webm";
@@ -30,8 +49,8 @@ const handleStart = () => {
 
     recorder = new MediaRecorder(stream, {mimeType : "video/webm"});
     // creates a new MediaRecorder object that will record a specified MediaStream
-    recorder.ondataavailable = (e) => {
-        videoFile = URL.createObjectURL(e.data)
+    recorder.ondataavailable = (event) => {
+        videoFile = URL.createObjectURL(event.data)
         video.srcObject = null;
         video.src = videoFile;
         video.loop = true;

@@ -29,9 +29,14 @@ videoRouter.route("/:id([0-9a-f]{24})/delete")
 videoRouter.route("/upload")
 .all(protectorMiddleware)
 .get(getUpload)
-.post(videoUpload.single("video"), postUpload);
+.post(videoUpload.fields([
+    {name : "video", maxCount : 1},
+    {name : "thumb", maxCount : 1},
+]), postUpload);
 // videoController에서 getUpload와 postUpload 불러오기
 // 같은 url안에서 GET과 POST로 축약
+// single req.file
+// fileds req.files
 
 export default videoRouter;
 

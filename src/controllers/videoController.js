@@ -149,8 +149,9 @@ export const postUpload = async (req, res) => {
             description, 
             hashtags
         },
-        file : {
-            path : fileUrl,
+        files : {
+            video,
+            thumb
         }
     } = req;
 
@@ -159,7 +160,8 @@ export const postUpload = async (req, res) => {
             // mongoose가 고유 id도 부여
             title,
             description,
-            fileUrl,
+            fileUrl : video[0].path,
+            thumbUrl : thumb[0].path,
             owner : _id,
             hashtags : Video.formatHashtags(hashtags),
         });

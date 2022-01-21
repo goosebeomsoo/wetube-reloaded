@@ -18,16 +18,20 @@ const handleDownload = async () => {
 
     ffmpeg.FS("writeFile", "recording.webm", await fetchFile(videoFile));
     // writeFile은 ffmpeg에 가상의 파일을 생성해줌
-    await ffmpeg.run("-i", "recording.webm", "-r", "60", "ouput.mp4");
+    await ffmpeg.run("-i", "recording.webm", "-r", "60", "output.mp4");
     // unsigned integer은 양의 정수를 의미
     // signed 음의 정수
     const mp4File = ffmpeg.FS("readFile", "output.mp4");
-    console.log(mp4File);
-    console.log(mp4File.buffer);
+     console.log(mp4File);
+     console.log(mp4File.buffer);
 
+    const mp4Blob = new Blob([mp4File.buffer], {type : "video/mp4"});
+
+    const mp4Url = URL.createObjectURL(mp4Blob);
+    
     const a = document.createElement("a");
-    a.href = videoFile;
-    a.download = "MyRecording.webm";
+    a.href = mp4Url;
+    a.download = "MyRecording.mp4";
     document.body.appendChild(a);
     a.click();
     // The HTMLAnchorElement.download property is a DOMString indicating that the linked resource is intended to be downloaded rather than displayed in the browser.
@@ -50,7 +54,7 @@ const handleStart = () => {
     recorder = new MediaRecorder(stream, {mimeType : "video/webm"});
     // creates a new MediaRecorder object that will record a specified MediaStream
     recorder.ondataavailable = (event) => {
-        videoFile = URL.createObjectURL(event.data)
+        videoFile = URL.createObjectURL(event.data);
         video.srcObject = null;
         video.src = videoFile;
         video.loop = true;

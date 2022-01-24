@@ -1,5 +1,4 @@
-import User from "../models/user";
-import Video from "../models/video";
+import User from "../models/User";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
@@ -238,7 +237,6 @@ export const finishGithubLogin = async (req, res) => {
 
 export const logout = (req, res) => {
     req.session.destroy();
-    req.flash("info", "Bye Bye")
     // 연결 종료
     return res.redirect("/login");
 };
@@ -293,7 +291,7 @@ export const postEdit = async (req, res) => {
                 errorMessage : "Exists Username",
             });
     };
-    console.log(req.session.user);
+
     const updatedUser = await User.findByIdAndUpdate( _id,
         {
             avatarUrl : file ? file.path : avatarUrl,
@@ -355,13 +353,13 @@ export const postChanagePassword = async (req,res) => {
     };
 };
 
-export const see = async (req, res) => {
+export const profile = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id).populate({
         path : "videos", // populate 대상
         populate : {
             path : "owner",
-            modile : "User",
+            model : "User",
         },
         // Double populate
     });

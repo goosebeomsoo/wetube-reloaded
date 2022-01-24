@@ -2,10 +2,12 @@ import "dotenv/config";
 // env 파일 불러오기 => 프로젝트 제일 앞 부분에 정의해주어야 함
 import "./db";
 // db.js File 불러오기
-import "./models/video";
-// models folder에 video.js 불러오기
-import "./models/user";
-// models folder에 user.js 불러오기
+import "./models/Video";
+// models folder에 Video.js 불러오기
+import "./models/User";
+// models folder에 User.js 불러오기
+import "./models/Comment";
+// models folder에 Comment.js 불러오기
 import app from "./server";
 // app변스로 server.js파일 불러오기
 

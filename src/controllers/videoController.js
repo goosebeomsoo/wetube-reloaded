@@ -1,5 +1,6 @@
-import Video from "../models/video";
-import User from "../models/user";
+import Video from "../models/Video";
+import User from "../models/User";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
     // promise
@@ -165,6 +166,7 @@ export const postUpload = async (req, res) => {
             owner : _id,
             hashtags : Video.formatHashtags(hashtags),
         });
+        
         const user = await User.findById(_id);
         user.videos.push(newVideo._id);
         user.save();
@@ -219,9 +221,9 @@ export const search = async (req, res) => {
     console.log(videos);
     return res.render("search", {pageTitle : "Search", videos});
 }
-/*
+/* 
 pug
-- returning HTML
+- returning HTMLß
 */
 
 export const registerView = async (req, res) => {
@@ -235,4 +237,10 @@ export const registerView = async (req, res) => {
     return res.sendStatus(200);
     // status는 render하기 전에 상태코드를 정할 수 있는 것
     // sendStatus는 상태코드를 보내고 연결을 끊는 것
+}
+
+export const createComment = (req,res) => {
+    console.log(req.params);
+    console.log(req.body);
+    return res.end();
 }

@@ -8,7 +8,7 @@ import {
     finishGithubLogin, 
     getEdit, 
     postEdit, 
-    see,
+    profile,
     getChanagePassword,
     postChanagePassword } 
     from "../controllers/userController";
@@ -34,6 +34,6 @@ userRouter.route("/change-password")
 .all(protectorMiddleware)
 .get(getChanagePassword)
 .post(postChanagePassword);
-userRouter.get("/:id", see);
+userRouter.get("/:id", profile);
 
 export default userRouter;

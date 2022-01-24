@@ -12,6 +12,7 @@ const videoSchema = new mongoose.Schema({
         views : { type : Number, default : 0, required : true },
         rating : { type : Number, default : 0, required : true },
     },
+    comments : [{type : mongoose.Schema.Types.ObjectId, required : true, ref : "Comment"}],
     owner : { type : mongoose.Schema.Types.ObjectId, required : true, ref : "User"},
     // ObjectId는 javascript에서 제공하지 않고 mongoose에서 제공
     // mongoose에게 data type을 구체적으로 작성할수록 더 편리함

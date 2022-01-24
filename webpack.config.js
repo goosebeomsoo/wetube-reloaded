@@ -6,11 +6,15 @@ const path = require("path");
 // path.resolve는 입력하는 파트들을 모아서 경로로 만들어줌.
 console.log(path.resolve(__dirname, "assets","js"));
 // __dirname : 파일까지의 전체경로
+
+const BASE_JS = "./src/client/js/"
+
 module.exports = {
     entry : {
-        main : "./src/client/js/main.js",
-        videoPlayer : "./src/client/js/videoPlayer.js",
-        recorder : "./src/client/js/recorder.js",
+        main : BASE_JS + "main.js",
+        videoPlayer : BASE_JS + "videoPlayer.js",
+        recorder : BASE_JS + "recorder.js",
+        commentSection : BASE_JS + "commentSection.js",
     },
     plugins : [new MiniCssExtractPlugin({ 
         filename : "css/styles.css", 

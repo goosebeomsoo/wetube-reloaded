@@ -108,14 +108,14 @@ const handleMouseLeave =  () => {
 };
 
 const handleKeypress = (e) => {
-    e.keyCode === 32;
-
-    if(video.paused) {
-        video.play();
-    } else {
-        video.pause();
-    };
-    playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
+    if(e.keyCode === 32) {
+        if(video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        };
+        playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
+    }
 }
 
 const handleEnded = () => {

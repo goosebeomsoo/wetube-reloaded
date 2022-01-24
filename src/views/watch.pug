@@ -19,6 +19,11 @@ block content
             div#fullScreen
                 button#fullScreenBtn
                     i#fullScreenBtnIcon.fas.fa-expand
+    if loggedIn
+        div.video__comments
+            form.video__comments-form#commentForm
+                textarea(cols="30", rows="10", placeholder="Write a nice comment..")
+                button Add Comment
             
     //-
         div
@@ -34,6 +39,8 @@ block content
             // 해당 url을 방문하면 비디오 삭제됨
 block scripts
     script(src="/static/js/videoPlayer.js")
+    if loggedIn
+        script(src="/static/js/commentSection.js")
 
 
     // href 앞에 /를 붙으면 현재 root가 /edit으로 (href="/url" => absolute url)

@@ -4,6 +4,8 @@ import morgan from "morgan";
 // logger middleware function
 import session from "express-session";
 // express-session를 session으로 불러오기
+import flash from "express-flash";
+// express-session를 session으로 불러오기
 import MongoStore from "connect-mongo";
 // databese(mongodb)에 session을 저장할 수 있게 해줌
 import rootRouter from "./routers/rootRouter";
@@ -73,6 +75,8 @@ Cookie component
 // session middleware가 있으면 express가 알아서 그 브라우저를 위한 id를 만들고, 브라우저한테 보내줌. 그러면 브라우저가 쿠키에 그 session id를 저장하고 express에서도 그 세션을 세션 DB에 저장. 그러면 브라우저한테 보내서 쿠키에 저장한 session id를 브라우저가 localhost:4000의 모든 url에 요청을 보낼 때마다 세션 id를 요청과 함께 보낸다. -> 백엔드에서 어떤 유저가, 어떤 브라우저에서 요청을 보냈는지 알 수 있음
 // session store는 우리가 session을 저장하는 곳
 
+app.use(flash());
+// session에 연결해서 user에게 message를 남김
 app.use(localsMiddleware);
 // locals middleware가 session middleware 다음에 와야 session object에 접근할 수 있음
 app.use((req,res,next) => {

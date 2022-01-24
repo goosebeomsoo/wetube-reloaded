@@ -18,6 +18,7 @@ export const protectorMiddleware = (req, res, next) => {
         // user가 loggdeIn되어있으면 next()함수 호출
         next();
     } else {
+        req.flash("error", "Not authorized");
         res.redirect("/login");
     }
 }
@@ -27,6 +28,7 @@ export const publicOnlyMiddleware = (req, res, next) => {
     if (!req.session.loggedIn) {
         next();
     } else {
+        req.flash("error", "Not authorized");
         return res.redirect("/");
     }
 }

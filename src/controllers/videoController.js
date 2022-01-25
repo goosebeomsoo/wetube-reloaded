@@ -48,7 +48,7 @@ export const watch = async (req, res) => {
     const { id } = req.params;
     // req.params는 router가 주는 express의 기능
     // express가 임의로 부여한 id를 변수로 지정
-    const video = await Video.findById(id).populate("owner");
+    const video = await Video.findById(id).populate("owner").populate("comments");
     // const owner = await User.findById(video.owner);
     // populate가 owner의 부분을 user의 정보로 채워줌
     console.log(video);
@@ -239,8 +239,24 @@ export const registerView = async (req, res) => {
     // sendStatus는 상태코드를 보내고 연결을 끊는 것
 }
 
-export const createComment = (req,res) => {
-    console.log(req.params);
-    console.log(req.body);
-    return res.end();
+export const createComment = async (req,res) => {
+    const {
+        session : { user },
+        body : { text },
+        params : { id },
+    } = req;
+    
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.sendStatus(404);
+    }
+
+    const comment = await Comment.create({
+        text,
+        owner : user._id,
+        video : id,
+    })
+    video.comments.push(comment._id);
+    video.save();
+    return res.sendStatus(201);
 }

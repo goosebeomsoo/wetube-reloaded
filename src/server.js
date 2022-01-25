@@ -47,6 +47,12 @@ app.use(express.urlencoded({extended : true}));
 // express application이 form의 value를 이해할 수 있도록 하고 우리가 사용할 수 있는 자바스크립트 형식으로 변형 (req.body를 사용할 수 있게 만들어줌)
 // middleware
 
+app.use(express.json());
+// string을 받아서 object로 변환해줌
+
+//app.use(express.text());
+// text를 보내면 그걸 이해하게 도와주는 middleware
+
 app.use(session({
     secret : process.env.COOKIE_SECRET, // longer, powerful, random
     // cookie에 sign할 때 사용하는 String

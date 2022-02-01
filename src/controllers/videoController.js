@@ -51,7 +51,6 @@ export const watch = async (req, res) => {
     const video = await Video.findById(id).populate("owner").populate("comments");
     // const owner = await User.findById(video.owner);
     // populate가 owner의 부분을 user의 정보로 채워줌
-    console.log(video);
     if (!video) {
         // dababase에 저장된 video data의 id 값이 일치하지않다면
         return res.status(404).render("404", {
@@ -262,7 +261,8 @@ export const createComment = async (req,res) => {
 }
 
 export const deleteComment = async (req,res) => {
-    const {id} = req.params
+    const { id } = req.params;
+
     await Comment.findByIdAndDelete(id);
-    res.sendStatus(201);
+    return res.sendStatus(201);
 }

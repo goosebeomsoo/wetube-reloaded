@@ -1,7 +1,7 @@
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
 const videoComments = document.querySelector(".video__comments ul");
-const deleteBtn = document.querySelector(".video__comment-delete");
+const deleteBtn = videoComments.querySelector("li button");
 
 addComment = (text, id) => {
     const newComment = document.createElement("li");
@@ -42,7 +42,6 @@ handleSubmit = async (e) => {
         addComment(text, newCommentId);
         // fetch의 response status가 201이면 comment 더하기
     }
-    console.log(response)
     // window.location.reload();
     // 새로고침
 };
@@ -52,16 +51,19 @@ if(form) {
 };
 
 handleDeleteComment = async (e) => {
-    if(e.target.className = "video__comment-delete") {
+    if (e.target.className === "video__comment-delete") {
         const response = await fetch(`/api/delete-comment/${e.target.parentElement.dataset.id}`, {
-            method :  "DELETE", 
-        }
-        );
+            method :  "DELETE",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+        });
+    
         if(response.status === 201) {
             e.target.parentElement.remove();
-        }
-    }
+        };
+    };
 };
 
 videoComments.addEventListener("click", handleDeleteComment);
-// click이 아닌 submit을 감지해야함
+    // click이 아닌 submit을 감지해야함

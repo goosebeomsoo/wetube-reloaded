@@ -20,7 +20,6 @@ module.exports = {
         filename : "css/styles.css", 
     })],
     mode : "development", // 개발중 모드 설정
-    watch : true,
     output : {
         filename : "js/[name].js", // [name]이라고 적어두면 entry에 있는 이름을 가져감
         path : path.resolve(__dirname, "assets"), // absolute path로 적어야함 : 처음부터 끝까지의 경로로

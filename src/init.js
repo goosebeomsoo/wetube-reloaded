@@ -1,3 +1,4 @@
+import "regenerator-runtime";
 import "dotenv/config";
 // env 파일 불러오기 => 프로젝트 제일 앞 부분에 정의해주어야 함
 import "./db";

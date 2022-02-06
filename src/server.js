@@ -1,21 +1,12 @@
 import express from "express";
-// Web Framework for Node.js
 import morgan from "morgan";
-// logger middleware function
 import session from "express-session";
-// express-session를 session으로 불러오기
 import flash from "express-flash";
-// express-session를 session으로 불러오기
 import MongoStore from "connect-mongo";
-// databese(mongodb)에 session을 저장할 수 있게 해줌
 import rootRouter from "./routers/rootRouter";
-// rooterRouter.js 파일에서 rootRouter 불러오기
 import videoRouter from "./routers/videoRouter";
-// videoRouter.js 파일에서 videoRouter 불러오기
 import userRouter from "./routers/userRouter";
-// userRouter.js 파일에서 userRouter 불러오기
 import { localsMiddleware } from "./middleware";
-// middleware.js 파일에서 localsMiddleware 불러
 import apiRouter from "./routers/apiRouter";
 
 const app = express();
